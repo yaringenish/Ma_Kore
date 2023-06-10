@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">MaKore</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="login_register">Not registered? Click here to register</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="display_name">Display name</string>
+    <string name="register">Register</string>
+    <string name="upload_profile_picture">Upload Profile Picture</string>
+</resources>
