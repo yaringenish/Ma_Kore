@@ -10,14 +10,14 @@
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="145dp"
-        tools:layout_editor_absoluteY="345dp">
+        tools:layout_editor_absoluteX="-99dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/lstChatItems"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/darker_gray" />
+            android:layout_height="match_parent"/>
+<!--            android:background="@android:color/darker_gray" />-->
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

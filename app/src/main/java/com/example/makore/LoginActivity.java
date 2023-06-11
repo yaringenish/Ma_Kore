@@ -25,6 +25,9 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLogin.setOnClickListener(view -> {
             username = binding.etLoginUsername.getText().toString();
             password = binding.etLoginPassword.getText().toString();
+
+            Intent intent = new Intent(this, ChatListActivity.class);
+            startActivity(intent);
             //validate
             //post request for token
             //setUsername
