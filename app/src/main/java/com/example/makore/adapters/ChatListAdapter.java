@@ -44,14 +44,26 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
         return new ChatListItemViewHolder(itemView);
     }
 
-
+//    public void bind(String base64Image) {
+//        byte[] imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
+//
+//        // Convert the byte array to an integer array
+//        int[] imageInts = new int[imageBytes.length];
+//        for (int i = 0; i < imageBytes.length; i++) {
+//            imageInts[i] = imageBytes[i] & 0xFF;
+//        }
+//
+//        // Pass the integer array to your ViewHolder
+//        // For example, if you have an ImageView in your ViewHolder:
+//        imageView.setImageDrawable(new ColorDrawable(imageInts[0]));
     @Override
     public void onBindViewHolder(ChatListItemViewHolder holder, int position) {
         if(chatListItems != null) {
             final ChatListItem current = chatListItems.get(position);
             holder.tvLastMsg.setText(current.getLstMsg());
             holder.tvDisplayName.setText(current.getDisplayName());
-            holder.ivPic.setImageResource(current.getPicture());
+//            holder.ivPic.setImageResource(current.getPicture());
+            holder.ivPic.setImageResource(0);
         }
     }
 

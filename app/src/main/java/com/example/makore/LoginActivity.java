@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.makore.api.ChatAPI;
+import com.example.makore.apiObjects.LoginData;
 import com.example.makore.apiObjects.TokenRequestBody;
+import com.example.makore.callbacks.TokenCallback;
 import com.example.makore.databinding.ActivityLoginBinding;
 
 
@@ -31,7 +33,26 @@ public class LoginActivity extends AppCompatActivity {
             password = binding.etLoginPassword.getText().toString();
 
 
-            chatAPI.getToken(username,password);
+//            LoginData loginData = new LoginData();
+            chatAPI.getToken(username, password,  new TokenCallback() {
+                @Override
+                public void onTokenReceived(LoginData ld) {
+                    if(ld.getToken() != null) {
+                        Intent intent = new Intent(LoginActivity.this, ChatListActivity.class);
+                        intent.putExtra("token", ld.getToken());
+                        startActivity(intent);
+                    } else {
+                        binding.tvLoginErrors.setText(R.string.usernameOrPassword);
+                    }
+                }
+            });
+//            if(loginData.getToken() != null) {
+//                Intent intent = new Intent(this, ChatListActivity.class);
+//                intent.putExtra("token", loginData.getToken());
+//                startActivity(intent);
+//            } else {
+//                binding.tvLoginErrors.setText(R.string.usernameOrPassword);
+//            }
 
 //            Intent intent = new Intent(this, ChatListActivity.class);
 //            startActivity(intent);

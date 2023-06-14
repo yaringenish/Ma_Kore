@@ -13,8 +13,8 @@ public class ChatItemViewModel extends ViewModel {
     private ChatItemRepository mRepository;
     private LiveData<List<ChatListItem>> chatList;
 
-     public ChatItemViewModel(){
-         mRepository = new ChatItemRepository();
+     public ChatItemViewModel(String token){
+         mRepository = new ChatItemRepository(token);
          chatList = mRepository.getAll();
      }
 
