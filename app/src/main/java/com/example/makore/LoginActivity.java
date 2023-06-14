@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.makore.api.ChatAPI;
+import com.example.makore.apiObjects.TokenRequestBody;
 import com.example.makore.databinding.ActivityLoginBinding;
 
 
@@ -12,6 +14,8 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private String username;
     private String password;
+
+    private ChatAPI  chatAPI = new ChatAPI();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,13 +30,16 @@ public class LoginActivity extends AppCompatActivity {
             username = binding.etLoginUsername.getText().toString();
             password = binding.etLoginPassword.getText().toString();
 
-            Intent intent = new Intent(this, ChatListActivity.class);
-            startActivity(intent);
+
+            chatAPI.getToken(username,password);
+
+//            Intent intent = new Intent(this, ChatListActivity.class);
+//            startActivity(intent);
             //validate
             //post request for token
             //setUsername
             //if valid username and password go to chat activity and transfer the token and username to the new intent
-            finish();
+//            finish();
         });
     }
     private void handleRegister(){

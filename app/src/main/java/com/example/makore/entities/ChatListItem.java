@@ -18,10 +18,10 @@ public class ChatListItem {
         this.lstMsg = lstMsg;
     }
 
-    public ChatListItem(String displayName, int picture) {
-        this.displayName = displayName;
-        this.picture = picture;
-    }
+//    public ChatListItem(String displayName, int picture) {
+//        this.displayName = displayName;
+//        this.picture = picture;
+//    }
 
 
     public String getDisplayName() {
