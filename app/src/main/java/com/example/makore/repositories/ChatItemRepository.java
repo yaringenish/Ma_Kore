@@ -35,17 +35,20 @@ private ChatListMessages chatListMessages;
     public ChatItemRepository(String token,String chatId) {
 //    LocalDatabase db = LocalDatabase.getInstance();
 //    dao = db.ChatDao(); // getting data from local storage
-        chatListMessages = new ChatListMessages();
         this.chatId = chatId;
         this.token = token;
+        chatListMessages = new ChatListMessages();
+
 //    api = new ChatAPI(ChatListData, dao); // getting data from server
     }
 
     class ChatListMessages extends MutableLiveData<List<Message>>{
         public ChatListMessages(){
             super();
-            List<Message> s = new LinkedList<>();
-            setValue(new LinkedList<>());
+            new Thread(() ->{
+                ChatAPI chatAPI = new ChatAPI();
+                chatAPI.getChat(chatListMessages, token,chatId);
+            }).start();
         }
         @Override
         protected void onActive() {

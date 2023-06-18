@@ -32,7 +32,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
     public void onItemClick(ChatListItem chatListItem) {
         Intent intent = new Intent(ChatListActivity.this, CurrentChatActivity.class);
         intent.putExtra("token", token);
-        intent.putExtra("ChatId",chatListItem.getId());
+        intent.putExtra("chatId",chatListItem.getId());
         startActivity(intent);
     }
     @Override
