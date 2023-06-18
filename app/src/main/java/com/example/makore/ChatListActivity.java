@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 
 import com.example.makore.adapters.ChatListAdapter;
 import com.example.makore.api.ChatAPI;
@@ -18,6 +20,7 @@ import com.example.makore.callbacks.GetChatCallBack;
 import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
 import com.example.makore.viewmodels.ChatItemViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +49,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
+        String token = getIntent().getStringExtra("token");
 
         token = getIntent().getStringExtra("token");
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
@@ -73,7 +77,29 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
             adapter.setChatListItems(chatListItems);
         });
 
+        handleAddContact();
+    }
 
+
+    private void handleAddContact(){
+        FloatingActionButton btn = findViewById(R.id.btnAddContact);
+        btn.setOnClickListener(view -> {
+            Intent intent = new Intent(this, AddContactActivity.class);
+            intent.putExtra("token", getIntent().getStringExtra("token"));
+            startActivity(intent);
+        });
 
     }
+
+
+//    protected void onResume() {
+//        super.onResume();
+//        viewModel.getChatList().observe(this, chatListItems -> {
+//            adapter.setChatListItems(chatListItems);
+//        });
+
+//    }
+
 }
+
+

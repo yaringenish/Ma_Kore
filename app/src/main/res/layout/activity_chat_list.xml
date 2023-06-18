@@ -36,7 +36,7 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnAdd"
+        android:id="@+id/btnAddContact"
         android:layout_width="427dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

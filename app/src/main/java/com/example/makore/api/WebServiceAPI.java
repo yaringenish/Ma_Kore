@@ -1,6 +1,7 @@
 package com.example.makore.api;
 
 import com.example.makore.apiObjects.RegisterRequestBody;
+import com.example.makore.apiObjects.AddContactRequestBody;
 import com.example.makore.apiObjects.TokenRequestBody;
 import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
@@ -21,7 +22,7 @@ public interface WebServiceAPI {
  Call<List<ChatListItem>> getChatsbyUsername(@Header("Authorization") String bearerToken);
 
  @POST("Chats")
- Call<Void> createChat(@Body ChatListItem chat);
+ Call<ResponseBody> createChat(@Header("Authorization") String bearerToken, @Body AddContactRequestBody requestBody);
 
  @GET("Chats/{id}")
  Call<Chat> getChatById(@Header("Authorization") String bearerToken, @Path("id") String id);
