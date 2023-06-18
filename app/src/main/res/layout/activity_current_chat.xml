@@ -36,7 +36,7 @@ tools:context=".ChatListActivity">
         <TextView
             android:id="@+id/userDisplayName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_marginStart="25dp"
             android:textSize="16sp"
             android:textStyle="bold" />

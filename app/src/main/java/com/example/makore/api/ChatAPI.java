@@ -8,13 +8,15 @@ import com.example.makore.apiObjects.AddContactRequestBody;
 import com.example.makore.apiObjects.LoginData;
 import com.example.makore.apiObjects.RegisterRequestBody;
 import com.example.makore.apiObjects.TokenRequestBody;
-import com.example.makore.callbacks.GetChatCallBack;
 import com.example.makore.callbacks.AddContactCallback;
 import com.example.makore.callbacks.RegisterCallBack;
 import com.example.makore.callbacks.TokenCallback;
 import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
+import com.example.makore.entities.Message;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -128,12 +130,18 @@ public class ChatAPI {
         });
     }
 
-    public void getChat(String token, String chatId , final GetChatCallBack callback){
+    public void getChat(MutableLiveData<List<Message>> chatListMessages, String token,String chatId){
         Call<Chat> call = webServiceAPI.getChatById(("Bearer " + token),chatId);
         call.enqueue(new Callback<Chat>() {
             @Override
             public void onResponse(Call<Chat> call, Response<Chat> response) {
-                    callback.onGetChatResponse(response.code(), response.body());
+                    Chat chat = response.body();
+                    List<Message> lstMsg = new LinkedList<>();
+                    for(int i = 0 ; i < chat.getMessages().length; i++){
+                        lstMsg.add(chat.getMessages()[i]);
+                    }
+                chatListMessages.postValue(lstMsg);
+//                    callback.onGetChatResponse(response.code(), response.body());
 
             }
             @Override

@@ -30,27 +30,15 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
     private ChatItemViewModel viewModel;
     private String token;
     public void onItemClick(ChatListItem chatListItem) {
-        String chatID = chatListItem.getId();
-        ChatAPI chatAPI = new ChatAPI();
-        chatAPI.getChat(token,chatID,new GetChatCallBack(){
-            @Override
-            public void onGetChatResponse(int status ,Chat chat){
-                if(status == 200){
-                    Log.e("fuck yes","success");
-                }
-                else{
-                    Log.e("fuck no","shit");
-                }
-            }
-
-        });
+        Intent intent = new Intent(ChatListActivity.this, CurrentChatActivity.class);
+        intent.putExtra("token", token);
+        intent.putExtra("ChatId",chatListItem.getId());
+        startActivity(intent);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
-        String token = getIntent().getStringExtra("token");
-
         token = getIntent().getStringExtra("token");
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull

@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.makore.R;
 import com.example.makore.api.ChatAPI;
+import com.example.makore.callbacks.GetChatCallBack;
+import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
 import com.example.makore.entities.Message;
 
@@ -16,8 +18,11 @@ import java.util.List;
 public class ChatItemRepository {
 //private ChatItemDao dao;
 private ChatListData ChatListData;
+
+private ChatListMessages chatListMessages;
 //private ChatAPI api;
     private String token;
+    private String chatId;
 
  public ChatItemRepository(String token) {
 //    LocalDatabase db = LocalDatabase.getInstance();
@@ -27,11 +32,29 @@ private ChatListData ChatListData;
 //    api = new ChatAPI(ChatListData, dao); // getting data from server
     }
 
-    class ChatMessages extends MutableLiveData<List<Message>>{
-        public ChatMessages(){
+    public ChatItemRepository(String token,String chatId) {
+//    LocalDatabase db = LocalDatabase.getInstance();
+//    dao = db.ChatDao(); // getting data from local storage
+        chatListMessages = new ChatListMessages();
+        this.chatId = chatId;
+        this.token = token;
+//    api = new ChatAPI(ChatListData, dao); // getting data from server
+    }
+
+    class ChatListMessages extends MutableLiveData<List<Message>>{
+        public ChatListMessages(){
             super();
             List<Message> s = new LinkedList<>();
             setValue(new LinkedList<>());
+        }
+        @Override
+        protected void onActive() {
+            super.onActive();
+            new Thread(() ->{
+                ChatAPI chatAPI = new ChatAPI();
+                chatAPI.getChat(chatListMessages, token,chatId);
+            }).start();
+//                 new Thread(()->{ChatListData.postValue(dao.get());}).start();
         }
 
     }
@@ -60,7 +83,9 @@ private ChatListData ChatListData;
     public LiveData <List<ChatListItem>> getAll() {
         return ChatListData;
     }
-
+    public LiveData <List<Message>> getMessages() {
+        return chatListMessages;
+    }
 //    public void addChatItem(final ChatListItem chatItem) {
 //            api.addChat(chatItem);
 //        }

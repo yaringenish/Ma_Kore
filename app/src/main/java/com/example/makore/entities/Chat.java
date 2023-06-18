@@ -8,6 +8,19 @@ public class Chat {
     @PrimaryKey(autoGenerate = true)
     private String id;
     private User[] users;
+
+    public String getId() {
+        return id;
+    }
+
+    public User[] getUsers() {
+        return users;
+    }
+
+    public Message[] getMessages() {
+        return messages;
+    }
+
     private Message[] messages;
 
     public Chat(User[] users, Message[] messages) {
