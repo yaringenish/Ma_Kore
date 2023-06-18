@@ -3,6 +3,7 @@ package com.example.makore;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,7 +49,7 @@ public class CurrentChatActivity extends AppCompatActivity {
         }).get(ChatItemViewModel.class);
 
         RecyclerView messageListItems = findViewById(R.id.lstMessages);
-        final MessageListAdapter adapter = new MessageListAdapter(this);
+        final MessageListAdapter adapter = new MessageListAdapter(this, getIntent().getStringExtra("username"));
 
         messageListItems.setAdapter(adapter);
         messageListItems.setLayoutManager(new LinearLayoutManager(this));
