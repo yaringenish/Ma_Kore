@@ -30,7 +30,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
     private ChatItemViewModel viewModel;
     private String token;
     public void onItemClick(ChatListItem chatListItem) {
-        Intent intent = new Intent(ChatListActivity.this, CurrentChatActivity.class);
+        Intent intent = new Intent(this, CurrentChatActivity.class);
         intent.putExtra("token", token);
         intent.putExtra("chatId",chatListItem.getId());
         startActivity(intent);

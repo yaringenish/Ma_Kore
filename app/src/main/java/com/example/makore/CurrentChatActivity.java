@@ -6,18 +6,27 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.makore.adapters.ChatListAdapter;
+import com.example.makore.adapters.MessageListAdapter;
 import com.example.makore.callbacks.GetChatCallBack;
 import com.example.makore.databinding.ActivityAddContactBinding;
+import com.example.makore.databinding.ActivityCurrentChatBinding;
 import com.example.makore.entities.Chat;
+import com.example.makore.entities.Message;
 import com.example.makore.viewmodels.ChatItemViewModel;
+
+import java.util.List;
 
 
 public class CurrentChatActivity extends AppCompatActivity {
-    private ActivityAddContactBinding binding;
+    private ActivityCurrentChatBinding binding;
 
     private ChatItemViewModel viewModel;
     private String token;
@@ -25,7 +34,7 @@ public class CurrentChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityAddContactBinding.inflate(getLayoutInflater());
+        binding = ActivityCurrentChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
@@ -38,8 +47,19 @@ public class CurrentChatActivity extends AppCompatActivity {
             }
         }).get(ChatItemViewModel.class);
 
-        RecyclerView lstChatItems = findViewById(R.id.lstMessages);
+        RecyclerView messageListItems = findViewById(R.id.lstMessages);
+        final MessageListAdapter adapter = new MessageListAdapter(this);
 
+        messageListItems.setAdapter(adapter);
+        messageListItems.setLayoutManager(new LinearLayoutManager(this));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
+        messageListItems.addItemDecoration(dividerItemDecoration);
+
+
+        viewModel.getCurrentChatMessages().observe(this, messages -> {
+            adapter.setMessageListItems(messages);
+
+        });
 
 
 
