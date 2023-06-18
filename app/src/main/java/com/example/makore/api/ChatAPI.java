@@ -4,8 +4,10 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.makore.apiObjects.AddContactRequestBody;
 import com.example.makore.apiObjects.LoginData;
 import com.example.makore.apiObjects.TokenRequestBody;
+import com.example.makore.callbacks.AddContactCallback;
 import com.example.makore.callbacks.TokenCallback;
 import com.example.makore.entities.ChatListItem;
 
@@ -71,10 +73,7 @@ public class ChatAPI {
         call.enqueue(new Callback<List<ChatListItem>>() {
             @Override
             public void onResponse(Call<List<ChatListItem>> call, Response<List<ChatListItem>> response) {
-                int c = response.code();
-                List<ChatListItem> r = response.body();
                 chatItems.postValue(response.body());
-                System.out.println("SDfsdf");
 //                if(response.code() == 200){
 //                    chatItems.postValue(response.body());
 //                    System.out.println("SDfsdf");
@@ -86,6 +85,28 @@ public class ChatAPI {
             }
         });
     }
+
+//    public void addContact(String username,String token, ,final AddContactCallback callback) {
+//        AddContactRequestBody requestBody = new AddContactRequestBody(username);
+//        Call<void> call = webServiceAPI.createChat(("Bearer " + token), requestBody);
+//        call.enqueue(new Callback<void>() {
+//            @Override
+//            public void onResponse(Call<List<ChatListItem>> call, Response<List<ChatListItem>> response) {
+//                int c = response.code();
+//                List<ChatListItem> r = response.body();
+//                chatItems.postValue(response.body());
+//                System.out.println("SDfsdf");
+////                if(response.code() == 200){
+////                    chatItems.postValue(response.body());
+////                    System.out.println("SDfsdf");
+////                }
+//            }
+//            @Override
+//            public void onFailure(Call<List<ChatListItem>> call, Throwable t) {
+//                Log.e("api", "Request failed: " + t.getMessage(), t);
+//            }
+//        });
+//    }
 
  }
 

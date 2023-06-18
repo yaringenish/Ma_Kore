@@ -33,7 +33,6 @@ public class LoginActivity extends AppCompatActivity {
             password = binding.etLoginPassword.getText().toString();
 
 
-//            LoginData loginData = new LoginData();
             chatAPI.getToken(username, password,  new TokenCallback() {
                 @Override
                 public void onTokenReceived(LoginData ld) {
