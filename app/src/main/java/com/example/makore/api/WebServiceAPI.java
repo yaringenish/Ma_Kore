@@ -21,7 +21,7 @@ public interface WebServiceAPI {
  Call<List<ChatListItem>> getChatsbyUsername(@Header("Authorization") String bearerToken);
 
  @POST("Chats")
- Call<Void> createChat(@Header("Authorization") String bearerToken, @Body AddContactRequestBody requestBody);
+ Call<ResponseBody> createChat(@Header("Authorization") String bearerToken, @Body AddContactRequestBody requestBody);
 
  @GET("Chats/{id}")
  Call<Void> getChatById(@Path("id") int id);

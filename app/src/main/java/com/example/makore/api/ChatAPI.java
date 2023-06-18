@@ -102,27 +102,29 @@ public class ChatAPI {
         });
     }
 
-//    public void addContact(String username,String token, ,final AddContactCallback callback) {
-//        AddContactRequestBody requestBody = new AddContactRequestBody(username);
-//        Call<void> call = webServiceAPI.createChat(("Bearer " + token), requestBody);
-//        call.enqueue(new Callback<void>() {
-//            @Override
-//            public void onResponse(Call<List<ChatListItem>> call, Response<List<ChatListItem>> response) {
-//                int c = response.code();
-//                List<ChatListItem> r = response.body();
-//                chatItems.postValue(response.body());
-//                System.out.println("SDfsdf");
-////                if(response.code() == 200){
-////                    chatItems.postValue(response.body());
-////                    System.out.println("SDfsdf");
-////                }
-//            }
-//            @Override
-//            public void onFailure(Call<List<ChatListItem>> call, Throwable t) {
-//                Log.e("api", "Request failed: " + t.getMessage(), t);
-//            }
-//        });
-//    }
+    public void addContact(String username,String token,final AddContactCallback callback) {
+        AddContactRequestBody requestBody = new AddContactRequestBody(username);
+        Call<ResponseBody> call = webServiceAPI.createChat(("Bearer " + token), requestBody);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.code() == 200) {
+                    callback.onAddContactResponse(response.code(), "");
+                } else {
+                    try{
+                        ResponseBody r2 = response.errorBody();
+                        callback.onAddContactResponse(response.code(), r2.string());
+                    } catch (Exception e) {
+                        // handle exception
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("api", "Request failed: " + t.getMessage(), t);
+            }
+        });
+    }
 
  }
 

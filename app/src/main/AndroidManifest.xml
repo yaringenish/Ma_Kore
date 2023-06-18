@@ -24,6 +24,12 @@
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
+            android:name=".CurrentChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddContactActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
