@@ -6,8 +6,10 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.makore.apiObjects.AddContactRequestBody;
 import com.example.makore.apiObjects.LoginData;
+import com.example.makore.apiObjects.RegisterRequestBody;
 import com.example.makore.apiObjects.TokenRequestBody;
 import com.example.makore.callbacks.AddContactCallback;
+import com.example.makore.callbacks.RegisterCallBack;
 import com.example.makore.callbacks.TokenCallback;
 import com.example.makore.entities.ChatListItem;
 
@@ -81,6 +83,20 @@ public class ChatAPI {
             }
             @Override
             public void onFailure(Call<List<ChatListItem>> call, Throwable t) {
+                Log.e("api", "Request failed: " + t.getMessage(), t);
+            }
+        });
+    }
+
+    public void createUser(RegisterRequestBody requestBody,  final RegisterCallBack callback){
+        Call<Void> call = webServiceAPI.createUser(requestBody);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                callback.onRegisterResponse(response.code());
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("api", "Request failed: " + t.getMessage(), t);
             }
         });

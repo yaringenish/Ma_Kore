@@ -29,8 +29,8 @@ public class LoginRepository {
         @Override
         protected void onActive() {
             super.onActive();
-//                 new Thread(()->{ChatListData.postValue(dao.get());}).start();
         }
+//                 new Thread(()->{ChatListData.postValue(dao.get());}).start();
     }
 //    public LiveData<LoginData> login(String username , String password) {
 //       loginData =  api.getToken(username,password);
