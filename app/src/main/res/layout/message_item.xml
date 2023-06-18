@@ -3,8 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,15 +13,11 @@
         android:orientation="vertical"
         android:padding="8dp"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        tools:layout_editor_absoluteY="0dp"
+        tools:ignore="MissingConstraints"
+        android:background="#2BCC32">
 
-        <TextView
-            android:id="@+id/tvSenderName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sender Name"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp" />
+
 
         <RelativeLayout
             android:layout_width="wrap_content"

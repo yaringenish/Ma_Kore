@@ -27,10 +27,8 @@ public class MessageListAdapter extends  RecyclerView.Adapter<MessageListAdapter
 
         private MessageListItemViewHolder(View itemView) {
             super(itemView);
-            //change to the id
-            this.content = itemView.findViewById(R.id.tvDisplayName);
-            // change to the id
-            this.date = itemView.findViewById(R.id.tvLastMsg);
+            this.content = itemView.findViewById(R.id.tvMessageContent);
+            this.date = itemView.findViewById(R.id.tvMessageDateTime);
         }
     }
 
@@ -40,8 +38,7 @@ public class MessageListAdapter extends  RecyclerView.Adapter<MessageListAdapter
 
     @Override
     public MessageListAdapter.MessageListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //change to the layout
-        View itemView = mInflater.inflate(R.layout.chat_list_item_layout, parent, false);
+        View itemView = mInflater.inflate(R.layout.message_item, parent, false);
         MessageListAdapter.MessageListItemViewHolder viewHolder = new MessageListAdapter.MessageListItemViewHolder(itemView);
         return viewHolder;
     }
@@ -50,11 +47,10 @@ public class MessageListAdapter extends  RecyclerView.Adapter<MessageListAdapter
     @Override
     public void onBindViewHolder(MessageListAdapter.MessageListItemViewHolder holder, int position) {
         if(messageListItems != null) {
-            final messageListItem current = messageListItems.get(position);
-            holder.tvLastMsg.setText(current.getLstMsg());
-            holder.tvDisplayName.setText(current.getDisplayName());
+            final Message current = messageListItems.get(position);
+            holder.content.setText(current.getContent());
+            holder.date.setText(current.getCreated().toString());
 //            holder.ivPic.setImageResource(current.getPicture());
-            holder.ivPic.setImageResource(0);
         }
     }
 
