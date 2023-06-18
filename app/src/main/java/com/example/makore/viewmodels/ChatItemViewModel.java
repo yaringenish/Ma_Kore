@@ -18,6 +18,7 @@ public class ChatItemViewModel extends ViewModel {
          chatList = mRepository.getAll();
      }
 
+
     public LiveData<List<ChatListItem>> getChatList() {
         return chatList;
     }

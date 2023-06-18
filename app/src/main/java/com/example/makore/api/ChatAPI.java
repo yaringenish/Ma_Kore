@@ -7,8 +7,10 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.makore.apiObjects.LoginData;
 import com.example.makore.apiObjects.RegisterRequestBody;
 import com.example.makore.apiObjects.TokenRequestBody;
+import com.example.makore.callbacks.GetChatCallBack;
 import com.example.makore.callbacks.RegisterCallBack;
 import com.example.makore.callbacks.TokenCallback;
+import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
 
 import java.util.List;
@@ -101,6 +103,19 @@ public class ChatAPI {
             }
         });
     }
+    public void getChat(String token, String chatId , final GetChatCallBack callback){
+        Call<Chat> call = webServiceAPI.getChatById(("Bearer " + token),chatId);
+        call.enqueue(new Callback<Chat>() {
+            @Override
+            public void onResponse(Call<Chat> call, Response<Chat> response) {
+                    callback.onGetChatResponse(response.code(), response.body());
 
+            }
+            @Override
+            public void onFailure(Call<Chat> call, Throwable t) {
+                Log.e("api", "Request failed: " + t.getMessage(), t);
+            }
+        });
+    }
  }
 

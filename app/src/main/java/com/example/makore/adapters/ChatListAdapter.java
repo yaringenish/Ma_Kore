@@ -15,7 +15,17 @@ import com.example.makore.entities.ChatListItem;
 import java.util.List;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatListItemViewHolder> {
+    public interface OnItemClickListener {
+        void onItemClick(ChatListItem chatListItem);
+    }
 
+    private OnItemClickListener listener;
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+    private final LayoutInflater mInflater;
+    private List<ChatListItem> chatListItems;
     class ChatListItemViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvDisplayName;
         private final TextView tvLastMsg;
@@ -29,8 +39,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
         }
     }
 
-    private final LayoutInflater mInflater;
-    private List<ChatListItem> chatListItems;
+
 
 
     public ChatListAdapter(Context context) {
@@ -38,11 +47,50 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
     }
 
 
+//    @Override
+//    public ChatListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//        View itemView = mInflater.inflate(R.layout.chat_list_item_layout, parent, false);
+//        ChatListItemViewHolder viewHolder = new ChatListItemViewHolder(itemView);
+//        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // Call your custom function here or perform any desired action
+//                onItemClick(viewHolder.getAdapterPosition());
+//            }
+//        });
+//
+//        return viewHolder;
+//    }
     @Override
     public ChatListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = mInflater.inflate(R.layout.chat_list_item_layout, parent, false);
-        return new ChatListItemViewHolder(itemView);
+        ChatListItemViewHolder viewHolder = new ChatListItemViewHolder(itemView);
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    int position = viewHolder.getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        ChatListItem chatListItem = chatListItems.get(position);
+                        listener.onItemClick(chatListItem);
+                    }
+                }
+            }
+        });
+
+        return viewHolder;
     }
+
+//    public void onItemClick(int position) {
+//        final ChatListItem current = chatListItems.get(position);
+//        String chatID = current.getId();
+//
+//
+//        // Handle the click event for the specific item
+//        // Perform any desired action here
+//        // You can access the item data using the position parameter
+//        // For example, you can retrieve the item from a list using lstChatItems.get(position)
+//    }
 
 //    public void bind(String base64Image) {
 //        byte[] imageBytes = Base64.decode(base64Image, Base64.DEFAULT);

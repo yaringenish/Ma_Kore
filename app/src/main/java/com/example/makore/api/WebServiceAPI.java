@@ -2,6 +2,7 @@ package com.example.makore.api;
 
 import com.example.makore.apiObjects.RegisterRequestBody;
 import com.example.makore.apiObjects.TokenRequestBody;
+import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public interface WebServiceAPI {
  Call<Void> createChat(@Body ChatListItem chat);
 
  @GET("Chats/{id}")
- Call<Void> getChatById(@Path("id") int id);
+ Call<Chat> getChatById(@Header("Authorization") String bearerToken, @Path("id") String id);
 
  @DELETE("Chats/{id}")
  Call<Void> deleteChat(@Path("id") int id);

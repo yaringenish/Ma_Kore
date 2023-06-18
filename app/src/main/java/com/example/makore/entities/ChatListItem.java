@@ -21,6 +21,13 @@ public class ChatListItem {
         this.user.setProfilePic("picture");
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
 
     public String getDisplayName() {
         return this.user.getDisplayName();

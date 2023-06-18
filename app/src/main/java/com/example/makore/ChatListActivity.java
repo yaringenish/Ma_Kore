@@ -10,23 +10,44 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.makore.adapters.ChatListAdapter;
+import com.example.makore.api.ChatAPI;
+import com.example.makore.callbacks.GetChatCallBack;
+import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
 import com.example.makore.viewmodels.ChatItemViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatListActivity extends AppCompatActivity {
+public class ChatListActivity extends AppCompatActivity implements ChatListAdapter.OnItemClickListener{
 
     private ChatItemViewModel viewModel;
+    private String token;
+    public void onItemClick(ChatListItem chatListItem) {
+        String chatID = chatListItem.getId();
+        ChatAPI chatAPI = new ChatAPI();
+        chatAPI.getChat(token,chatID,new GetChatCallBack(){
+            @Override
+            public void onGetChatResponse(int status ,Chat chat){
+                if(status == 200){
+                    Log.e("fuck yes","success");
+                }
+                else{
+                    Log.e("fuck no","shit");
+                }
+            }
+
+        });
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
 
-        String token = getIntent().getStringExtra("token");
+        token = getIntent().getStringExtra("token");
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
@@ -45,13 +66,13 @@ public class ChatListActivity extends AppCompatActivity {
 
         lstChatItems.setAdapter(adapter);
         lstChatItems.setLayoutManager(new LinearLayoutManager(this));
-
+        adapter.setOnItemClickListener(this);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
         lstChatItems.addItemDecoration(dividerItemDecoration);
-
         viewModel.getChatList().observe(this, chatListItems -> {
             adapter.setChatListItems(chatListItems);
         });
+
 
 
     }
