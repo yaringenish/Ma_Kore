@@ -1,5 +1,6 @@
 package com.example.makore.api;
 
+import com.example.makore.apiObjects.RegisterRequestBody;
 import com.example.makore.apiObjects.TokenRequestBody;
 import com.example.makore.entities.ChatListItem;
 
@@ -34,7 +35,7 @@ public interface WebServiceAPI {
  Call<Void> getMessages(@Path("id") int id);
 
  @POST("Users")
- Call<Void> createUser (@Body ChatListItem chat);
+ Call<Void> createUser (@Body RegisterRequestBody requestBody);
 
  @GET("Users/{username}")
  Call<Void> getUser(@Path("id") int id);

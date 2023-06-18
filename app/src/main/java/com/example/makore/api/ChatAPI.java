@@ -5,7 +5,9 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.makore.apiObjects.LoginData;
+import com.example.makore.apiObjects.RegisterRequestBody;
 import com.example.makore.apiObjects.TokenRequestBody;
+import com.example.makore.callbacks.RegisterCallBack;
 import com.example.makore.callbacks.TokenCallback;
 import com.example.makore.entities.ChatListItem;
 
@@ -31,7 +33,7 @@ public class ChatAPI {
     //            this.dao = dao;
 //         192.168.52.231
          retrofit = new Retrofit.Builder()
-                 .baseUrl("http://192.168.68.104:12345/")
+                 .baseUrl("http://10.0.0.25:12345/")
                  .callbackExecutor(Executors.newSingleThreadExecutor())
                  .addConverterFactory(GsonConverterFactory.create())
                  .build();
@@ -74,7 +76,6 @@ public class ChatAPI {
                 int c = response.code();
                 List<ChatListItem> r = response.body();
                 chatItems.postValue(response.body());
-                System.out.println("SDfsdf");
 //                if(response.code() == 200){
 //                    chatItems.postValue(response.body());
 //                    System.out.println("SDfsdf");
@@ -82,6 +83,20 @@ public class ChatAPI {
             }
             @Override
             public void onFailure(Call<List<ChatListItem>> call, Throwable t) {
+                Log.e("api", "Request failed: " + t.getMessage(), t);
+            }
+        });
+    }
+
+    public void createUser(RegisterRequestBody requestBody,  final RegisterCallBack callback){
+        Call<Void> call = webServiceAPI.createUser(requestBody);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                callback.onRegisterResponse(response.code());
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
                 Log.e("api", "Request failed: " + t.getMessage(), t);
             }
         });
