@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.makore.apiObjects.AddContactRequestBody;
+import com.example.makore.apiObjects.AddMessageRequestBody;
 import com.example.makore.apiObjects.LoginData;
 import com.example.makore.apiObjects.RegisterRequestBody;
 import com.example.makore.apiObjects.TokenRequestBody;
@@ -39,7 +40,7 @@ public class ChatAPI {
     //            this.dao = dao;
 //         192.168.52.231
          retrofit = new Retrofit.Builder()
-                 .baseUrl("http://192.168.68.104:12345/")
+                 .baseUrl("http://172.18.45.126:12345/")
                  .callbackExecutor(Executors.newSingleThreadExecutor())
                  .addConverterFactory(GsonConverterFactory.create())
                  .build();
@@ -149,6 +150,26 @@ public class ChatAPI {
                 Log.e("api", "Request failed: " + t.getMessage(), t);
             }
         });
+    }
+
+
+    public void addMessage(MutableLiveData<List<Message>> chatListMessages , String token , String chatId , AddMessageRequestBody requestBody){
+        Call<Message> call = webServiceAPI.addMessage(("Bearer " + token),chatId,requestBody);
+        List<Message> lst = chatListMessages.getValue();
+        call.enqueue(new Callback<Message>() {
+            @Override
+            public void onResponse(Call<Message> call, Response<Message> response) {
+                if(response.code() == 200){
+                    lst.add(response.body());
+                    chatListMessages.postValue(lst);
+                }
+            }
+            @Override
+            public void onFailure(Call<Message> call, Throwable t) {
+                Log.e("api", "Request failed: " + t.getMessage(), t);
+            }
+        });
+
     }
  }
 

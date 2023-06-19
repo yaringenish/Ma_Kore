@@ -21,14 +21,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/username"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textSize="18sp"
+            android:padding="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"/>
 
         <EditText
             android:id="@+id/etLoginPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textSize="18sp"
+            android:padding="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"/>
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="wrap_content"
@@ -40,8 +50,11 @@
             android:id="@+id/btnLoginRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login_register"
             android:layout_gravity="center"
-            />
+            android:text="@string/login_register"
+            android:background="@android:color/transparent"
+            android:textColor="#002DA1"/>
     </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

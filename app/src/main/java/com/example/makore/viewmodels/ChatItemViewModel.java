@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 
+import com.example.makore.apiObjects.AddMessageRequestBody;
 import com.example.makore.entities.ChatListItem;
 import com.example.makore.entities.Message;
 import com.example.makore.repositories.ChatItemRepository;
@@ -30,6 +31,10 @@ public class ChatItemViewModel extends ViewModel {
     }
     public LiveData<List<Message>> getCurrentChatMessages() {
         return currentChatMessages;
+    }
+
+    public void addMessage(AddMessageRequestBody requestBody){
+        mRepository.addMessage(requestBody);
     }
 
 //    public void add(ChatListItem chatItem){
