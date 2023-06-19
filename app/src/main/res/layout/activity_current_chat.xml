@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bigLinearLayout"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
+
 tools:context=".CurrentChatActivity">
 
 <com.google.android.material.appbar.AppBarLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
     tools:ignore="MissingConstraints">
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,14 +40,19 @@ tools:context=".CurrentChatActivity">
             android:id="@+id/userDisplayName"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
-            android:layout_marginStart="25dp"
-            android:textSize="16sp"
+            android:layout_marginStart="35dp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
     </LinearLayout>
 
 
 </com.google.android.material.appbar.AppBarLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
 
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     android:id="@+id/refreshLayout"
@@ -57,6 +65,10 @@ tools:context=".CurrentChatActivity">
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
 
     <LinearLayout
         android:layout_width="match_parent"

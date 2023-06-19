@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,7 +48,12 @@ public class MessageListAdapter extends  RecyclerView.Adapter<MessageListAdapter
 
     @Override
     public MessageListAdapter.MessageListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.message_item, parent, false);
+        View itemView;
+        if(viewType == 1) {
+            itemView = mInflater.inflate(R.layout.incoming_message_layout, parent, false);
+        } else {
+            itemView = mInflater.inflate(R.layout.outgoing_message_layout, parent, false);
+        }
         MessageListAdapter.MessageListItemViewHolder viewHolder = new MessageListAdapter.MessageListItemViewHolder(itemView);
         return viewHolder;
     }
@@ -56,66 +62,72 @@ public class MessageListAdapter extends  RecyclerView.Adapter<MessageListAdapter
     @Override
     public void onBindViewHolder(MessageListAdapter.MessageListItemViewHolder holder, int position) {
         if(messageListItems != null) {
-
             final Message current = messageListItems.get(position);
             holder.content.setText(current.getContent());
             holder.date.setText(current.getCreated().toString());
-            if(current.getSender().getUsername().equals(this.username)) {
-                holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.outGoing));
-
-
-
-
-
-//                RecyclerView rv = holder.itemView.findViewById(R.id.LinearLayout1);
-//                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-//                        LinearLayout.LayoutParams.WRAP_CONTENT,
-//                        LinearLayout.LayoutParams.WRAP_CONTENT
-//                );
+//            if(current.getSender().getUsername().equals(this.username)) {
+//                holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.outGoing));
 //
-//                // Modify the layout parameters as needed
-//                layoutParams.gravity = Gravity.END;
 //
-//                rv.setLayoutParams(layoutParams);
-
-//                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rv.getLayoutParams();
-//                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-//                rv.setLayoutParams(layoutParams);
-
-
-//                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.itemView.getLayoutParams();
-//                layoutParams.startToStart = ConstraintLayout.LayoutParams.UNSET;
-//                layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-//                holder.itemView.setLayoutParams(layoutParams);
-
-//                ((ConstraintLayout) holder.itemView)..
-//                setGravity(Gravity.END);
 //
-//                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.itemView.getLayoutParams();
-//                layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-//                holder.itemView.setLayoutParams(layoutParams);
-
-
-//                ((LinearLayout) holder.itemView).setGravity(Gravity.END);
-
-//                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.getLayoutParams();
-//                layoutParams.gravity = Gravity.END;
-//                holder.itemView.setLayoutParams(layoutParams);
-
-//                holder.itemView.offsetLeftAndRight(0);
-            } else {
-                holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.inComing));
-
-//                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.itemView.getLayoutParams();
-//                layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
-//                holder.itemView.setLayoutParams(layoutParams);
-
-//                ((LinearLayout) holder.itemView).setGravity(Gravity.START);
-//                holder.itemView.offsetLeftAndRight(100);
-            }
+//
+//
+////                RecyclerView rv = holder.itemView.findViewById(R.id.LinearLayout1);
+////                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+////                        LinearLayout.LayoutParams.WRAP_CONTENT,
+////                        LinearLayout.LayoutParams.WRAP_CONTENT
+////                );
+////
+////                // Modify the layout parameters as needed
+////                layoutParams.gravity = Gravity.END;
+////
+////                rv.setLayoutParams(layoutParams);
+//
+////                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rv.getLayoutParams();
+////                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+////                rv.setLayoutParams(layoutParams);
+//
+//
+////                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.itemView.getLayoutParams();
+////                layoutParams.startToStart = ConstraintLayout.LayoutParams.UNSET;
+////                layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+////                holder.itemView.setLayoutParams(layoutParams);
+//
+////                ((ConstraintLayout) holder.itemView)..
+////                setGravity(Gravity.END);
+////
+////                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.itemView.getLayoutParams();
+////                layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+////                holder.itemView.setLayoutParams(layoutParams);
+//
+//
+////                ((LinearLayout) holder.itemView).setGravity(Gravity.END);
+//
+////                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.getLayoutParams();
+////                layoutParams.gravity = Gravity.END;
+////                holder.itemView.setLayoutParams(layoutParams);
+//
+////                holder.itemView.offsetLeftAndRight(0);
+//            } else {
+//                holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.inComing));
+//
+////                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.itemView.getLayoutParams();
+////                layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+////                holder.itemView.setLayoutParams(layoutParams);
+//
+////                ((LinearLayout) holder.itemView).setGravity(Gravity.START);
+////                holder.itemView.offsetLeftAndRight(100);
+//            }
         }
     }
-
+    @Override
+    public int getItemViewType(int position) {
+        if (messageListItems.get(position).getSender().getUsername().equals(this.username)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
     public void setMessageListItems(List<Message> c) {
         this.messageListItems = c;

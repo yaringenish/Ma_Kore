@@ -3,6 +3,7 @@ package com.example.makore;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -59,15 +60,16 @@ public class CurrentChatActivity extends AppCompatActivity {
         RecyclerView messageListItems = findViewById(R.id.lstMessages);
         final MessageListAdapter adapter = new MessageListAdapter(this, getIntent().getStringExtra("username"));
 
+        TextView tvDisplayName = binding.userDisplayName;
+        tvDisplayName.setText(getIntent().getStringExtra("otherUser"));
         messageListItems.setAdapter(adapter);
         messageListItems.setLayoutManager(new LinearLayoutManager(this));
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
-        messageListItems.addItemDecoration(dividerItemDecoration);
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
+//        messageListItems.addItemDecoration(dividerItemDecoration);
 
 
         viewModel.getCurrentChatMessages().observe(this, messages -> {
             adapter.setMessageListItems(messages);
-
         });
         handleSend();
 
@@ -79,6 +81,7 @@ public class CurrentChatActivity extends AppCompatActivity {
         if(requestBody.getMsg() != ""){
             viewModel.addMessage(requestBody);
         }
+        binding.sendBar.setText("");
         });
     }
 }
