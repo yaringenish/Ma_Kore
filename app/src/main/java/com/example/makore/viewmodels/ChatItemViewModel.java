@@ -23,8 +23,8 @@ public class ChatItemViewModel extends ViewModel {
          mRepository = new ChatItemRepository(token,context);
          chatList = mRepository.getAll();
      }
-    public ChatItemViewModel(String token,String chatId,Context context){
-        mRepository = new ChatItemRepository(token,chatId,context);
+    public ChatItemViewModel(String token,String chatId,Context context,String username){
+        mRepository = new ChatItemRepository(token,chatId,context,username);
         chatList = mRepository.getAll();
         currentChatMessages = mRepository.getMessages();
     }

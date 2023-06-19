@@ -1,17 +1,34 @@
 package com.example.makore.entities;
 
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 @Entity
 public class ChatListItem {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey @NonNull
     private String id;
 
     private User user;
     private String lastMessage;
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+    }
 
     public ChatListItem(User user, String lastMessage) {
         this.user = user;

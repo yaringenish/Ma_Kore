@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Entity
 public class Message {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey()
     private String id;
     private Date created;
     private User sender;

@@ -1,13 +1,22 @@
 package com.example.makore.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
 public class Chat {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey @NonNull
     private String id;
     private User[] users;
+
+    public void setId(@NonNull String id) {
+        this.id = id;
+    }
+
+    public void setUsers(User[] users) {
+        this.users = users;
+    }
 
     public String getId() {
         return id;

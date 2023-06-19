@@ -28,6 +28,8 @@ private ChatListData ChatListData;
 private ChatListMessages chatListMessages;
     private AppDB db;
     private String token;
+
+    private String username;
     private String chatId;
     private ChatDao chatDao;
     private ChatItemDao chatItemDao;
@@ -52,13 +54,13 @@ private ChatListMessages chatListMessages;
 
     }
 
-    public ChatItemRepository(String token,String chatId,Context context) {
+    public ChatItemRepository(String token,String chatId,Context context,String username) {
 //    LocalDatabase db = LocalDatabase.getInstance();
         db = Room.databaseBuilder(context,
                         AppDB.class, "FooDB")
                 .allowMainThreadQueries().build();
         chatItemDao = db.chatItemDao();
-
+        this.username = username;
         this.chatId = chatId;
         this.token = token;
         chatListMessages = new ChatListMessages();

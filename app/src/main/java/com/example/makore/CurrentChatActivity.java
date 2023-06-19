@@ -38,6 +38,8 @@ public class CurrentChatActivity extends AppCompatActivity {
     private String token;
     private String chatId;
 
+    private String username;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,26 +48,27 @@ public class CurrentChatActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         token = getIntent().getStringExtra("token");
         chatId = getIntent().getStringExtra("chatId");
+        username = getIntent().getStringExtra("username");
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                 if (modelClass.isAssignableFrom(ChatItemViewModel.class)) {
-                    return (T) new ChatItemViewModel(getIntent().getStringExtra("token"),getIntent().getStringExtra("chatId"),CurrentChatActivity.this);
+
+                    return (T) new ChatItemViewModel(token,chatId,CurrentChatActivity.this,username);
                 }
                 throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
             }
         }).get(ChatItemViewModel.class);
 
         RecyclerView messageListItems = findViewById(R.id.lstMessages);
-        final MessageListAdapter adapter = new MessageListAdapter(this, getIntent().getStringExtra("username"));
+        final MessageListAdapter adapter = new MessageListAdapter(this,username );
 
         TextView tvDisplayName = binding.userDisplayName;
         tvDisplayName.setText(getIntent().getStringExtra("otherUser"));
         messageListItems.setAdapter(adapter);
         messageListItems.setLayoutManager(new LinearLayoutManager(this));
-//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
-//        messageListItems.addItemDecoration(dividerItemDecoration);
+
 
 
         viewModel.getCurrentChatMessages().observe(this, messages -> {
