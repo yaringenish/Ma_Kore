@@ -5,24 +5,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
     >
 
     <LinearLayout
         android:id="@+id/LinearLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/outgoing_bubble"
+        android:gravity="start"
         android:orientation="vertical"
         android:padding="8dp"
-        tools:ignore="MissingConstraints"
-        >
+
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints">
 
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="8dp">
+            >
 
             <TextView
                 android:id="@+id/tvMessageContent"

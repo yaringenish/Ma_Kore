@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="outGoing">#4CAF50</color>
+    <color name="inComing">#009688</color>
+    <color name="Bar">#D6E3E9</color>
+    <color name="divider">#D9E4EA</color>
+
 </resources>

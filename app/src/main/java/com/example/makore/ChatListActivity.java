@@ -37,6 +37,8 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
         Intent intent = new Intent(this, CurrentChatActivity.class);
         intent.putExtra("token", token);
         intent.putExtra("chatId",chatListItem.getId());
+        intent.putExtra("otherUser", chatListItem.getDisplayName());
+        intent.putExtra("username", getIntent().getStringExtra("username"));
         startActivity(intent);
     }
     @Override

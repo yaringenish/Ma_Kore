@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(ld.getToken() != null) {
                         Intent intent = new Intent(LoginActivity.this, ChatListActivity.class);
                         intent.putExtra("token", ld.getToken());
+                        intent.putExtra("username", ld.getUsername());
                         startActivity(intent);
                     } else {
                         binding.tvLoginErrors.setText(R.string.usernameOrPassword);
