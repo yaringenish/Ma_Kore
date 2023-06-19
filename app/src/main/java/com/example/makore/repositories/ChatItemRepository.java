@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.makore.R;
 import com.example.makore.api.ChatAPI;
+import com.example.makore.apiObjects.AddMessageRequestBody;
 import com.example.makore.callbacks.GetChatCallBack;
 import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
@@ -23,6 +24,8 @@ private ChatListMessages chatListMessages;
 //private ChatAPI api;
     private String token;
     private String chatId;
+
+    private ChatAPI chatAPI = new ChatAPI();
 
  public ChatItemRepository(String token) {
 //    LocalDatabase db = LocalDatabase.getInstance();
@@ -88,6 +91,10 @@ private ChatListMessages chatListMessages;
     }
     public LiveData <List<Message>> getMessages() {
         return chatListMessages;
+    }
+
+    public void addMessage(AddMessageRequestBody requestBody){
+        chatAPI.addMessage(chatListMessages, token, chatId , requestBody);
     }
 //    public void addChatItem(final ChatListItem chatItem) {
 //            api.addChat(chatItem);

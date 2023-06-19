@@ -16,7 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.makore.adapters.ChatListAdapter;
 import com.example.makore.adapters.MessageListAdapter;
+import com.example.makore.api.ChatAPI;
+import com.example.makore.apiObjects.AddMessageRequestBody;
+import com.example.makore.apiObjects.LoginData;
 import com.example.makore.callbacks.GetChatCallBack;
+import com.example.makore.callbacks.TokenCallback;
 import com.example.makore.databinding.ActivityAddContactBinding;
 import com.example.makore.databinding.ActivityCurrentChatBinding;
 import com.example.makore.entities.Chat;
@@ -31,12 +35,16 @@ public class CurrentChatActivity extends AppCompatActivity {
 
     private ChatItemViewModel viewModel;
     private String token;
+    private String chatId;
+    private ChatAPI chatAPI = new ChatAPI();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityCurrentChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        token = getIntent().getStringExtra("token");
+        chatId = getIntent().getStringExtra("chatId");
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
@@ -61,11 +69,16 @@ public class CurrentChatActivity extends AppCompatActivity {
             adapter.setMessageListItems(messages);
 
         });
-
-
-
-
+        handleSend();
 
     }
 
+    private void handleSend() {
+        binding.btnSend.setOnClickListener(view -> {
+        AddMessageRequestBody requestBody =  new AddMessageRequestBody(binding.sendBar.getText().toString());
+        if(requestBody.getMsg() != ""){
+            viewModel.addMessage(requestBody);
+        }
+        });
+    }
 }

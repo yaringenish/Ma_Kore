@@ -31,9 +31,6 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLogin.setOnClickListener(view -> {
             username = binding.etLoginUsername.getText().toString();
             password = binding.etLoginPassword.getText().toString();
-
-
-//            LoginData loginData = new LoginData();
             chatAPI.getToken(username, password,  new TokenCallback() {
                 @Override
                 public void onTokenReceived(LoginData ld) {
@@ -47,21 +44,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }
             });
-//            if(loginData.getToken() != null) {
-//                Intent intent = new Intent(this, ChatListActivity.class);
-//                intent.putExtra("token", loginData.getToken());
-//                startActivity(intent);
-//            } else {
-//                binding.tvLoginErrors.setText(R.string.usernameOrPassword);
-//            }
-
-//            Intent intent = new Intent(this, ChatListActivity.class);
-//            startActivity(intent);
-            //validate
-            //post request for token
-            //setUsername
-            //if valid username and password go to chat activity and transfer the token and username to the new intent
-//            finish();
         });
     }
     private void handleRegister(){
