@@ -40,7 +40,7 @@ public class ChatAPI {
     //            this.dao = dao;
 //         192.168.52.231
          retrofit = new Retrofit.Builder()
-                 .baseUrl("http://172.18.45.126:12345/")
+                 .baseUrl("http://10.0.0.25:12345/")
                  .callbackExecutor(Executors.newSingleThreadExecutor())
                  .addConverterFactory(GsonConverterFactory.create())
                  .build();

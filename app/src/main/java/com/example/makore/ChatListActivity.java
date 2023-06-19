@@ -17,6 +17,7 @@ import android.widget.Button;
 import com.example.makore.adapters.ChatListAdapter;
 import com.example.makore.api.ChatAPI;
 import com.example.makore.callbacks.GetChatCallBack;
+import com.example.makore.dao.ChatItemDao;
 import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
 import com.example.makore.viewmodels.ChatItemViewModel;
@@ -28,7 +29,10 @@ import java.util.List;
 public class ChatListActivity extends AppCompatActivity implements ChatListAdapter.OnItemClickListener{
 
     private ChatItemViewModel viewModel;
+
     private String token;
+
+
     public void onItemClick(ChatListItem chatListItem) {
         Intent intent = new Intent(this, CurrentChatActivity.class);
         intent.putExtra("token", token);
@@ -45,11 +49,22 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                 if (modelClass.isAssignableFrom(ChatItemViewModel.class)) {
-                    return (T) new ChatItemViewModel(token);
+                    return (T) new ChatItemViewModel(token, ChatListActivity.this);
                 }
                 throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
             }
         }).get(ChatItemViewModel.class);
+//        viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
+//            @NonNull
+//            @Override
+//            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+//                if (modelClass.isAssignableFrom(ChatItemViewModel.class)) {
+//                    return (T) new ChatItemViewModel(token);
+//                }
+//                throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
+//            }
+//        }).get(ChatItemViewModel.class);
+
 
 
 //        viewModel = new ViewModelProvider(this).get(ChatItemViewModel.class);

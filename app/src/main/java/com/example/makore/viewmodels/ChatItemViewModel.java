@@ -1,5 +1,7 @@
 package com.example.makore.viewmodels;
 
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -15,16 +17,17 @@ public class ChatItemViewModel extends ViewModel {
     private ChatItemRepository mRepository;
     private LiveData<List<ChatListItem>> chatList;
     private LiveData<List<Message>> currentChatMessages;
-     public ChatItemViewModel(String token){
-         mRepository = new ChatItemRepository(token);
+
+    private Context context;
+     public ChatItemViewModel(String token,Context context){
+         mRepository = new ChatItemRepository(token,context);
          chatList = mRepository.getAll();
      }
-    public ChatItemViewModel(String token,String chatId){
-        mRepository = new ChatItemRepository(token,chatId);
+    public ChatItemViewModel(String token,String chatId,Context context){
+        mRepository = new ChatItemRepository(token,chatId,context);
         chatList = mRepository.getAll();
         currentChatMessages = mRepository.getMessages();
     }
-
 
     public LiveData<List<ChatListItem>> getChatList() {
         return chatList;

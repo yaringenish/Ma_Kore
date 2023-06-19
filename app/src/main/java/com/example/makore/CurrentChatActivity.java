@@ -35,7 +35,7 @@ public class CurrentChatActivity extends AppCompatActivity {
     private ChatItemViewModel viewModel;
     private String token;
     private String chatId;
-    private ChatAPI chatAPI = new ChatAPI();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ public class CurrentChatActivity extends AppCompatActivity {
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                 if (modelClass.isAssignableFrom(ChatItemViewModel.class)) {
-                    return (T) new ChatItemViewModel(getIntent().getStringExtra("token"),getIntent().getStringExtra("chatId"));
+                    return (T) new ChatItemViewModel(getIntent().getStringExtra("token"),getIntent().getStringExtra("chatId"),CurrentChatActivity.this);
                 }
                 throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
             }

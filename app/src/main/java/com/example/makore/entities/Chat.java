@@ -23,6 +23,10 @@ public class Chat {
 
     private Message[] messages;
 
+    public void setMessages(Message[] messages) {
+        this.messages = messages;
+    }
+
     public Chat(User[] users, Message[] messages) {
         this.users = users;
         this.messages = messages;

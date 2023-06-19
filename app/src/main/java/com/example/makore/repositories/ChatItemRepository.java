@@ -1,14 +1,19 @@
 package com.example.makore.repositories;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.room.Room;
 
+import com.example.makore.AppDB;
 import com.example.makore.R;
 import com.example.makore.api.ChatAPI;
 import com.example.makore.apiObjects.AddMessageRequestBody;
 import com.example.makore.callbacks.GetChatCallBack;
+import com.example.makore.dao.ChatDao;
+import com.example.makore.dao.ChatItemDao;
 import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
 import com.example.makore.entities.Message;
@@ -17,27 +22,43 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ChatItemRepository {
-//private ChatItemDao dao;
+
 private ChatListData ChatListData;
 
 private ChatListMessages chatListMessages;
-//private ChatAPI api;
+    private AppDB db;
     private String token;
     private String chatId;
+    private ChatDao chatDao;
+    private ChatItemDao chatItemDao;
+    private ChatAPI chatAPI ;
 
-    private ChatAPI chatAPI = new ChatAPI();
+    private Chat currentChat;
+    private List<Message> chatMessages;
 
- public ChatItemRepository(String token) {
+    private List<ChatListItem> chatItemsList;
+
+
+
+ public ChatItemRepository(String token,Context context) {
 //    LocalDatabase db = LocalDatabase.getInstance();
-//    dao = db.ChatDao(); // getting data from local storage
-    ChatListData = new ChatListData();
+     db = Room.databaseBuilder(context,
+                     AppDB.class, "FooDB")
+             .allowMainThreadQueries().build();
+     chatDao =  db.chatDao();
+     ChatListData = new ChatListData();
+     chatAPI = new ChatAPI();
     this.token = token;
-//    api = new ChatAPI(ChatListData, dao); // getting data from server
+
     }
 
-    public ChatItemRepository(String token,String chatId) {
+    public ChatItemRepository(String token,String chatId,Context context) {
 //    LocalDatabase db = LocalDatabase.getInstance();
-//    dao = db.ChatDao(); // getting data from local storage
+        db = Room.databaseBuilder(context,
+                        AppDB.class, "FooDB")
+                .allowMainThreadQueries().build();
+        chatItemDao = db.chatItemDao();
+
         this.chatId = chatId;
         this.token = token;
         chatListMessages = new ChatListMessages();
@@ -48,6 +69,13 @@ private ChatListMessages chatListMessages;
     class ChatListMessages extends MutableLiveData<List<Message>>{
         public ChatListMessages(){
             super();
+            //from Dao
+            currentChat = chatDao.get(chatId);
+            chatMessages = new LinkedList<>();
+            for(int i = 0 ; i < currentChat.getMessages().length; i++){
+                chatMessages.add(currentChat.getMessages()[i]);
+            }
+            chatListMessages.postValue(chatMessages);
             new Thread(() ->{
                 ChatAPI chatAPI = new ChatAPI();
                 chatAPI.getChat(chatListMessages, token,chatId);
@@ -56,8 +84,15 @@ private ChatListMessages chatListMessages;
         @Override
         protected void onActive() {
             super.onActive();
+            //from Dao
+            currentChat = chatDao.get(chatId);
+            List<Message> chatMessages = new LinkedList<>();
+            for(int i = 0 ; i < currentChat.getMessages().length; i++){
+                chatMessages.add(currentChat.getMessages()[i]);
+            }
+            chatListMessages.postValue(chatMessages);
+            //from server
             new Thread(() ->{
-                ChatAPI chatAPI = new ChatAPI();
                 chatAPI.getChat(chatListMessages, token,chatId);
             }).start();
 //                 new Thread(()->{ChatListData.postValue(dao.get());}).start();
@@ -69,23 +104,25 @@ private ChatListMessages chatListMessages;
     class ChatListData extends MutableLiveData<List<ChatListItem>> {
     public ChatListData() {
         super();
-        List<ChatListItem> s = new LinkedList<>();
-        setValue(new LinkedList<>());
-//        ChatAPI chatAPI = new ChatAPI();
-        //and doing everything that needs to get all the chatListItems.
+        //from Dao
+        chatItemsList = chatItemDao.index();
+        ChatListData.postValue(chatItemsList);
+        new Thread(() ->{
+            chatAPI.getChatsbyUsername(ChatListData, token);
+        }).start();
     }
 
              @Override
              protected void onActive() {
                  super.onActive();
                  new Thread(() ->{
-                     ChatAPI chatAPI = new ChatAPI();
                      chatAPI.getChatsbyUsername(ChatListData, token);
-                     Log.i("here", "gere");
                  }).start();
-//                 new Thread(()->{ChatListData.postValue(dao.get());}).start();
              }
  }
+
+
+
     public LiveData <List<ChatListItem>> getAll() {
         return ChatListData;
     }
@@ -95,6 +132,13 @@ private ChatListMessages chatListMessages;
 
     public void addMessage(AddMessageRequestBody requestBody){
         chatAPI.addMessage(chatListMessages, token, chatId , requestBody);
+        int newSize = currentChat.getMessages().length + 1;
+        Message[] updatedMessages = new Message[newSize];
+        System.arraycopy(getMessages(), 0, updatedMessages, 0, currentChat.getMessages().length);
+//        updatedMessages[newSize - 1] = new Message();
+//        chatAPI.getUser()
+        currentChat.setMessages(updatedMessages);
+        chatDao.update(currentChat);
     }
 //    public void addChatItem(final ChatListItem chatItem) {
 //            api.addChat(chatItem);
