@@ -1,9 +1,6 @@
 package com.example.makore;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
-
-import androidx.room.Database;
-import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 import com.example.makore.dao.ChatDao;
