@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.makore.apiObjects.AddContactRequestBody;
 import com.example.makore.apiObjects.AddMessageRequestBody;
+import com.example.makore.apiObjects.FireBaseTokenPostBody;
 import com.example.makore.apiObjects.LoginData;
 import com.example.makore.apiObjects.RegisterRequestBody;
 import com.example.makore.apiObjects.TokenRequestBody;
@@ -171,5 +172,21 @@ public class ChatAPI {
         });
 
     }
+
+    public void saveFireBaseToken(String username, String token){
+        FireBaseTokenPostBody fireBaseTokenPostBody = new FireBaseTokenPostBody(username, token);
+        Call<ResponseBody> call = webServiceAPI.saveFireBaseToken(fireBaseTokenPostBody);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                int a = 7;
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("api", "Request failed: " + t.getMessage(), t);
+            }
+        });
+    }
+
  }
 

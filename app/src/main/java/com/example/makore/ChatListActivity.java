@@ -16,11 +16,14 @@ import android.widget.Button;
 
 import com.example.makore.adapters.ChatListAdapter;
 import com.example.makore.api.ChatAPI;
+import com.example.makore.apiObjects.FireBaseTokenPostBody;
 import com.example.makore.callbacks.GetChatCallBack;
 import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
 import com.example.makore.viewmodels.ChatItemViewModel;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,7 @@ import java.util.List;
 public class ChatListActivity extends AppCompatActivity implements ChatListAdapter.OnItemClickListener{
 
     private ChatItemViewModel viewModel;
+    private ChatAPI  chatAPI= new ChatAPI();
     private String token;
     public void onItemClick(ChatListItem chatListItem) {
         Intent intent = new Intent(this, CurrentChatActivity.class);
@@ -68,6 +72,13 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
         });
 
         handleAddContact();
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(ChatListActivity.this,
+                instanceIdResult -> {
+                    String fireBaseToken = instanceIdResult.getToken();
+                    String username = getIntent().getStringExtra("username");
+                    chatAPI.saveFireBaseToken(username, fireBaseToken);
+                });
     }
 
 
