@@ -1,6 +1,9 @@
 package com.example.makore.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,8 +113,17 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
             final ChatListItem current = chatListItems.get(position);
             holder.tvLastMsg.setText(current.getLstMsg());
             holder.tvDisplayName.setText(current.getDisplayName());
+
+            String checkName = current.getDisplayName();
+
+            String base64String = current.getProfilePic();
+            String base64Image = base64String.split(",")[1];
+            byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            holder.ivPic.setImageBitmap(decodedByte);
+
 //            holder.ivPic.setImageResource(current.getPicture());
-            holder.ivPic.setImageResource(0);
+//            holder.ivPic.setImageResource(0);
         }
     }
 

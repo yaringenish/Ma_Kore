@@ -1,8 +1,12 @@
 package com.example.makore;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -78,6 +82,14 @@ public class CurrentChatActivity extends AppCompatActivity {
         messageListItems.setLayoutManager(new LinearLayoutManager(this));
 
 
+        String base64String = contactPicture;
+        String base64Image = base64String.split(",")[1];
+        byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+        ImageView userPictureIv = binding.userPicture;
+        userPictureIv.setImageBitmap(decodedByte);
+
 
         viewModel.getCurrentChatMessages().observe(this, messages -> {
             adapter.setMessageListItems(messages);
@@ -85,7 +97,7 @@ public class CurrentChatActivity extends AppCompatActivity {
         handleSend();
 
         msgFrom.observe(this, msgName -> {
-            viewModel.reload(msgName);
+            viewModel.reload(msgName, 2);
         });
 
 
@@ -95,7 +107,7 @@ public class CurrentChatActivity extends AppCompatActivity {
     private void handleSend() {
         binding.btnSend.setOnClickListener(view -> {
         AddMessageRequestBody requestBody =  new AddMessageRequestBody(binding.sendBar.getText().toString());
-        if(requestBody.getMsg() != ""){
+        if(!requestBody.getMsg().equals("")){
             viewModel.addMessage(requestBody);
         }
         binding.sendBar.setText("");

@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatListActivity extends AppCompatActivity implements ChatListAdapter.OnItemClickListener{
-
+    private static String currentUsername;
     private ChatItemViewModel viewModel;
     private ChatAPI  chatAPI= new ChatAPI();
     private MutableLiveData<String> msgFrom = SingletonUpdate.getMsgFrom();
@@ -54,6 +54,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
+        currentUsername = getIntent().getStringExtra("username");
         token = getIntent().getStringExtra("token");
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
@@ -81,7 +82,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
         });
 
         msgFrom.observe(this, msgName -> {
-            viewModel.reload(msgName);
+            viewModel.reload(msgName, 1);
         });
 
         handleAddContact();
@@ -97,7 +98,9 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
 
     }
 
-
+    public static  String getCurrentUsername() {
+        return currentUsername;
+    }
 
 
     private void handleAddContact(){

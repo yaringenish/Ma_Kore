@@ -33,11 +33,11 @@ public class LoginActivity extends AppCompatActivity {
     private void handleLogin() {
         binding.btnLogin.setOnClickListener(view -> {
             setContentView(R.layout.connecting);
-//            username = binding.etLoginUsername.getText().toString();
-//            password = binding.etLoginPassword.getText().toString();
+            username = binding.etLoginUsername.getText().toString();
+            password = binding.etLoginPassword.getText().toString();
 
-            username = "yarin";
-            password = "11111111";
+//            username = "yarin";
+//            password = "11111111";
             chatAPI.getToken(username, password,  new TokenCallback() {
                 @Override
                 public void onTokenReceived(LoginData ld) {
@@ -52,6 +52,12 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setContentView(binding.getRoot());
     }
     private void handleRegister(){
         binding.btnLoginRegister.setOnClickListener(view -> {

@@ -47,7 +47,7 @@ public class ChatItemViewModel extends ViewModel {
 //    public void delete(ChatListItem chatItem){
 //        mRepository.delete(chatItem);
 //    }
-    public void reload(String msgName){
-        mRepository.reload(msgName);
+    public void reload(String msgName, int type){
+        mRepository.reload(msgName, type);
     }
 }

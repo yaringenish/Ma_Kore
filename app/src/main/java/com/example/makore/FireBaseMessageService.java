@@ -77,7 +77,10 @@ public class FireBaseMessageService extends FirebaseMessagingService {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            notificationManagerCompat.notify(1, builder.build());
+            String currentUsername = ChatListActivity.getCurrentUsername();
+            if(!currentUsername.equals(otherUser)) {
+                notificationManagerCompat.notify(1, builder.build());
+            }
         }
     }
 

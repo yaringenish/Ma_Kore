@@ -26,4 +26,7 @@ public interface ChatItemDao {
         @Delete
         void delete(List<ChatListItem> chatitems);
 
+        @Query("DELETE  FROM chatlistitem")
+        void deleteAllChatItems();
+
 }
