@@ -12,9 +12,12 @@ import com.example.makore.apiObjects.TokenRequestBody;
 import com.example.makore.callbacks.AddContactCallback;
 import com.example.makore.callbacks.RegisterCallBack;
 import com.example.makore.callbacks.TokenCallback;
+import com.example.makore.dao.ChatDao;
+import com.example.makore.dao.ChatItemDao;
 import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
 import com.example.makore.entities.Message;
+import com.example.makore.entities.User;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -75,12 +78,22 @@ public class ChatAPI {
          });
     }
 
-    public void getChatsbyUsername(MutableLiveData<List<ChatListItem>> chatItems,String token) {
+    public void getChatsbyUsername(MutableLiveData<List<ChatListItem>> chatItems,String token, ChatItemDao chatItemDao) {
         Call<List<ChatListItem>> call = webServiceAPI.getChatsbyUsername(("Bearer " + token));
         call.enqueue(new Callback<List<ChatListItem>>() {
             @Override
             public void onResponse(Call<List<ChatListItem>> call, Response<List<ChatListItem>> response) {
                 chatItems.postValue(response.body());
+                List<ChatListItem> chatListItems = response.body();
+                if (chatListItems != null) {
+                    for (ChatListItem chatListItem : chatListItems) {
+                        if (chatListItem.getLstMsg() == null) {
+                            // Create a new Message object and set it as the lstMsg of the ChatListItem
+                            chatListItem.setlastMessage("");
+                        }
+                    }
+                }
+                chatItemDao.insert(chatListItems);
 //                if(response.code() == 200){
 //                    chatItems.postValue(response.body());
 //                    System.out.println("SDfsdf");
@@ -131,7 +144,7 @@ public class ChatAPI {
         });
     }
 
-    public void getChat(MutableLiveData<List<Message>> chatListMessages, String token,String chatId){
+    public void getChat(MutableLiveData<List<Message>> chatListMessages, String token, String chatId, ChatDao chatDao,Chat currentChat){
         Call<Chat> call = webServiceAPI.getChatById(("Bearer " + token),chatId);
         call.enqueue(new Callback<Chat>() {
             @Override
@@ -141,9 +154,11 @@ public class ChatAPI {
                     for(int i = 0 ; i < chat.getMessages().length; i++){
                         lstMsg.add(chat.getMessages()[i]);
                     }
-                chatListMessages.postValue(lstMsg);
-//                    callback.onGetChatResponse(response.code(), response.body());
-
+                    chatListMessages.postValue(lstMsg);
+                    chat.setId(chatId);
+                    chatDao.insert(chat);
+                    currentChat.setUsers(chat.getUsers());
+                    currentChat.setId(chatId);
             }
             @Override
             public void onFailure(Call<Chat> call, Throwable t) {
@@ -153,7 +168,8 @@ public class ChatAPI {
     }
 
 
-    public void addMessage(MutableLiveData<List<Message>> chatListMessages , String token , String chatId , AddMessageRequestBody requestBody){
+    public void addMessage(MutableLiveData<List<Message>> chatListMessages , String token , String chatId ,
+                           AddMessageRequestBody requestBody,ChatDao chatDao , Chat currentChat , String username , User contact1){
         Call<Message> call = webServiceAPI.addMessage(("Bearer " + token),chatId,requestBody);
         List<Message> lst = chatListMessages.getValue();
         call.enqueue(new Callback<Message>() {
@@ -162,6 +178,21 @@ public class ChatAPI {
                 if(response.code() == 200){
                     lst.add(response.body());
                     chatListMessages.postValue(lst);
+
+                    int newSize = lst.size();
+                    Message[] updatedMessages = new Message[newSize];
+                    if(currentChat.getMessages() != null)
+                    System.arraycopy(currentChat.getMessages(), 0, updatedMessages, 0, currentChat.getMessages().length);
+                    User contact;
+                    if(currentChat.getUsers()[0].getUsername() == username){
+                        contact = currentChat.getUsers()[1];
+                    }
+                    else{
+                        contact = currentChat.getUsers()[0];
+                    }
+                    updatedMessages[newSize - 1] = new Message(contact,requestBody.getMsg());
+                    currentChat.setMessages(updatedMessages);
+                    chatDao.insert(currentChat);
                 }
             }
             @Override

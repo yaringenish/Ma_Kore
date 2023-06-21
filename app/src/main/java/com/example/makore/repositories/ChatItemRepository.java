@@ -17,13 +17,14 @@ import com.example.makore.dao.ChatItemDao;
 import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
 import com.example.makore.entities.Message;
+import com.example.makore.entities.User;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class ChatItemRepository {
 
-private ChatListData ChatListData;
+private ChatListData chatListData;
 
 private ChatListMessages chatListMessages;
     private AppDB db;
@@ -35,69 +36,64 @@ private ChatListMessages chatListMessages;
     private ChatItemDao chatItemDao;
     private ChatAPI chatAPI ;
 
-    private Chat currentChat;
+    private Chat currentChat = new Chat(null,null);
     private List<Message> chatMessages;
 
     private List<ChatListItem> chatItemsList;
 
-
+    private User contact;
+    private User user;
 
  public ChatItemRepository(String token,Context context) {
 //    LocalDatabase db = LocalDatabase.getInstance();
      db = Room.databaseBuilder(context,
                      AppDB.class, "FooDB")
              .allowMainThreadQueries().build();
-     chatDao =  db.chatDao();
-     ChatListData = new ChatListData();
+     chatListData = new ChatListData();
      chatAPI = new ChatAPI();
-    this.token = token;
+     chatItemDao = db.chatItemDao();
+     this.token = token;
 
     }
 
-    public ChatItemRepository(String token,String chatId,Context context,String username) {
+    public ChatItemRepository(String token,String chatId,Context context,String username,User contact) {
 //    LocalDatabase db = LocalDatabase.getInstance();
         db = Room.databaseBuilder(context,
                         AppDB.class, "FooDB")
                 .allowMainThreadQueries().build();
-        chatItemDao = db.chatItemDao();
+        chatAPI = new ChatAPI();
+        chatDao =  db.chatDao();
         this.username = username;
         this.chatId = chatId;
         this.token = token;
+        this.contact = contact;
         chatListMessages = new ChatListMessages();
-
-//    api = new ChatAPI(ChatListData, dao); // getting data from server
     }
 
     class ChatListMessages extends MutableLiveData<List<Message>>{
         public ChatListMessages(){
             super();
-            //from Dao
-            currentChat = chatDao.get(chatId);
-            chatMessages = new LinkedList<>();
-            for(int i = 0 ; i < currentChat.getMessages().length; i++){
-                chatMessages.add(currentChat.getMessages()[i]);
-            }
-            chatListMessages.postValue(chatMessages);
-            new Thread(() ->{
-                ChatAPI chatAPI = new ChatAPI();
-                chatAPI.getChat(chatListMessages, token,chatId);
-            }).start();
         }
         @Override
         protected void onActive() {
             super.onActive();
             //from Dao
+            Chat stam = new Chat(null,null);
             currentChat = chatDao.get(chatId);
-            List<Message> chatMessages = new LinkedList<>();
-            for(int i = 0 ; i < currentChat.getMessages().length; i++){
-                chatMessages.add(currentChat.getMessages()[i]);
+
+            if(currentChat != null) {
+                chatMessages = new LinkedList<>();
+                for (int i = 0; i < currentChat.getMessages().length; i++) {
+                    chatMessages.add(currentChat.getMessages()[i]);
+                }
+                chatListMessages.setValue(chatMessages);
             }
-            chatListMessages.postValue(chatMessages);
-            //from server
+            else{
+                currentChat = new Chat(null,null);
+            }
             new Thread(() ->{
-                chatAPI.getChat(chatListMessages, token,chatId);
+                chatAPI.getChat(chatListMessages, token,chatId,chatDao,currentChat);
             }).start();
-//                 new Thread(()->{ChatListData.postValue(dao.get());}).start();
         }
 
     }
@@ -106,53 +102,35 @@ private ChatListMessages chatListMessages;
     class ChatListData extends MutableLiveData<List<ChatListItem>> {
     public ChatListData() {
         super();
-        //from Dao
-        chatItemsList = chatItemDao.index();
-        ChatListData.postValue(chatItemsList);
-        new Thread(() ->{
-            chatAPI.getChatsbyUsername(ChatListData, token);
-        }).start();
     }
-
              @Override
              protected void onActive() {
+                 chatItemsList = chatItemDao.index();
+                 chatListData.setValue(chatItemsList);
                  super.onActive();
                  new Thread(() ->{
-                     chatAPI.getChatsbyUsername(ChatListData, token);
+                     chatAPI.getChatsbyUsername(chatListData, token,chatItemDao);
                  }).start();
              }
  }
 
-
-
     public LiveData <List<ChatListItem>> getAll() {
-        return ChatListData;
+        return chatListData;
     }
     public LiveData <List<Message>> getMessages() {
         return chatListMessages;
     }
 
     public void addMessage(AddMessageRequestBody requestBody){
-        chatAPI.addMessage(chatListMessages, token, chatId , requestBody);
-        int newSize = currentChat.getMessages().length + 1;
-        Message[] updatedMessages = new Message[newSize];
-        System.arraycopy(getMessages(), 0, updatedMessages, 0, currentChat.getMessages().length);
-//        updatedMessages[newSize - 1] = new Message();
-//        chatAPI.getUser()
-        currentChat.setMessages(updatedMessages);
-        chatDao.update(currentChat);
+        new Thread(() ->{
+            chatAPI.addMessage(chatListMessages, token, chatId , requestBody,chatDao , currentChat,this.username,contact);
+        }).start();
+
     }
-//    public void addChatItem(final ChatListItem chatItem) {
-//            api.addChat(chatItem);
-//        }
-//
-//       public void delete(final ChatListItem chatItem) {
-//            api.delete(chatItem);
-//     }
-//
-//         public void reload() {
-//             api.get();
-//        }
+         public void reload() {
+             chatAPI.getChatsbyUsername(chatListData, token,chatItemDao);
+
+        }
 
     }
 

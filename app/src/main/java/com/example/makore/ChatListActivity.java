@@ -32,12 +32,15 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
 
     private String token;
 
+    private  ChatListAdapter adapter;
 
     public void onItemClick(ChatListItem chatListItem) {
         Intent intent = new Intent(this, CurrentChatActivity.class);
         intent.putExtra("token", token);
         intent.putExtra("chatId",chatListItem.getId());
         intent.putExtra("otherUser", chatListItem.getDisplayName());
+        intent.putExtra("picture",chatListItem.getProfilePic());
+        intent.putExtra("otherUsername",chatListItem.getUser().getUsername());
         intent.putExtra("username", getIntent().getStringExtra("username"));
         startActivity(intent);
     }
@@ -71,7 +74,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
 
 //        viewModel = new ViewModelProvider(this).get(ChatItemViewModel.class);
         RecyclerView lstChatItems = findViewById(R.id.lstChatItems);
-        final ChatListAdapter adapter = new ChatListAdapter(this);
+          adapter = new ChatListAdapter(this);
 
         lstChatItems.setAdapter(adapter);
         lstChatItems.setLayoutManager(new LinearLayoutManager(this));
@@ -84,6 +87,8 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
 
         handleAddContact();
     }
+
+
 
 
     private void handleAddContact(){

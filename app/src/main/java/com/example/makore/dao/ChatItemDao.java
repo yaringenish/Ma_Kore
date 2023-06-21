@@ -3,6 +3,7 @@ package com.example.makore.dao;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -18,11 +19,11 @@ public interface ChatItemDao {
 
         @Query("SELECT * FROM chatlistitem WHERE id = :id")
         ChatListItem get(int id);
-        @Insert
-        void insert(ChatListItem... chatitems);
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
+        void insert(List<ChatListItem> chatitems);
         @Update
-        void update(ChatListItem... chatitems);
+        void update(List<ChatListItem> chatitems);
         @Delete
-        void delete(ChatListItem... chatitems);
+        void delete(List<ChatListItem> chatitems);
 
 }

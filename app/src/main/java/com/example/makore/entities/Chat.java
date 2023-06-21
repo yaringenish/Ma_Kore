@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.sql.Array;
+
 @Entity
 public class Chat {
     @PrimaryKey @NonNull
@@ -39,5 +41,7 @@ public class Chat {
     public Chat(User[] users, Message[] messages) {
         this.users = users;
         this.messages = messages;
+
     }
+
 }

@@ -69,7 +69,11 @@ public class ChatListItem {
     }
 
     public void setlastMessage(String lstMsg) {
-        this.lastMessage = lastMessage;
+        this.lastMessage = lstMsg;
+    }
+
+    public void setLstMsg(Message message){
+        this.lastMessage = "";
     }
 }
 

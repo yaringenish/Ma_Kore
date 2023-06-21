@@ -29,8 +29,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleLogin() {
         binding.btnLogin.setOnClickListener(view -> {
-            username = binding.etLoginUsername.getText().toString();
-            password = binding.etLoginPassword.getText().toString();
+            setContentView(R.layout.connecting);
+//            username = binding.etLoginUsername.getText().toString();
+//            password = binding.etLoginPassword.getText().toString();
+
+            username = "yarin";
+            password = "11111111";
             chatAPI.getToken(username, password,  new TokenCallback() {
                 @Override
                 public void onTokenReceived(LoginData ld) {
