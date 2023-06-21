@@ -47,6 +47,7 @@ public class CurrentChatActivity extends AppCompatActivity {
     private String contactPicture;
     private String contactDisplay;
     private String username;
+    private TextView url;
 
 
     @Override
@@ -59,7 +60,8 @@ public class CurrentChatActivity extends AppCompatActivity {
         username = getIntent().getStringExtra("username");
         contactDisplay = getIntent().getStringExtra("otherUser");
         contactPicture = getIntent().getStringExtra("picture");
-        contactUsername =getIntent().getStringExtra("otherUsername");
+        contactUsername = getIntent().getStringExtra("otherUsername");
+        url = SharedViewSingleton.getInstance().getSharedTextView();
         User contact = new User(contactUsername,contactDisplay,contactPicture);
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
@@ -67,7 +69,7 @@ public class CurrentChatActivity extends AppCompatActivity {
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                 if (modelClass.isAssignableFrom(ChatItemViewModel.class)) {
 
-                    return (T) new ChatItemViewModel(token,chatId,CurrentChatActivity.this,username,contact);
+                    return (T) new ChatItemViewModel(token,chatId,CurrentChatActivity.this,username,contact,url.getText().toString());
                 }
                 throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
             }
@@ -112,5 +114,10 @@ public class CurrentChatActivity extends AppCompatActivity {
         }
         binding.sendBar.setText("");
         });
+    }
+
+    protected void onResume() {
+        super.onResume();
+        viewModel.setChatApi(url.getText().toString());
     }
 }

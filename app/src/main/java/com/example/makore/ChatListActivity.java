@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.makore.adapters.ChatListAdapter;
 import com.example.makore.api.ChatAPI;
@@ -23,7 +24,6 @@ import com.example.makore.dao.ChatItemDao;
 import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
 import com.example.makore.viewmodels.ChatItemViewModel;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -39,6 +39,8 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
     private String token;
 
     private  ChatListAdapter adapter;
+
+    private TextView url;
 
     public void onItemClick(ChatListItem chatListItem) {
         Intent intent = new Intent(this, CurrentChatActivity.class);
@@ -56,12 +58,13 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
         setContentView(R.layout.activity_chat_list);
         currentUsername = getIntent().getStringExtra("username");
         token = getIntent().getStringExtra("token");
+        url = SharedViewSingleton.getInstance().getSharedTextView();
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                 if (modelClass.isAssignableFrom(ChatItemViewModel.class)) {
-                    return (T) new ChatItemViewModel(token, ChatListActivity.this);
+                    return (T) new ChatItemViewModel(token, ChatListActivity.this,url.getText().toString());
                 }
                 throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
             }
@@ -86,6 +89,8 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
         });
 
         handleAddContact();
+        handleSettings();
+    }
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(ChatListActivity.this,
                 instanceIdResult -> {
@@ -96,6 +101,11 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
 
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.setChatApi(url.getText().toString());
+    }
     }
 
     public static  String getCurrentUsername() {
@@ -108,6 +118,15 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
         btn.setOnClickListener(view -> {
             Intent intent = new Intent(this, AddContactActivity.class);
             intent.putExtra("token", getIntent().getStringExtra("token"));
+            startActivity(intent);
+        });
+
+    }
+
+    private void handleSettings(){
+        Button btn = findViewById(R.id.btnSettings);
+        btn.setOnClickListener(view -> {
+            Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         });
 

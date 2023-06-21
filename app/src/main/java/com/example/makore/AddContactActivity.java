@@ -2,6 +2,7 @@ package com.example.makore;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,17 +17,25 @@ public class AddContactActivity extends AppCompatActivity {
     private String username;
     private String token;
 
-    private ChatAPI chatAPI = new ChatAPI();
+    private ChatAPI chatAPI;
+
+    private TextView url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAddContactBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        url = SharedViewSingleton.getInstance().getSharedTextView();
+        chatAPI = new ChatAPI(findViewById(R.id.url).toString());
         handleBack();
         handleAddContact();
     }
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        chatAPI = new ChatAPI(url.getText().toString());
+    }
 
     private void handleAddContact() {
         binding.btnAddContact.setOnClickListener(view -> {

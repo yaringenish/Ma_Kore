@@ -45,30 +45,33 @@ public class ChatItemRepository {
     private User contact;
     private User user;
 
-    public ChatItemRepository(String token, Context context) {
+ public ChatItemRepository(String token,Context context,String url) {
 //    LocalDatabase db = LocalDatabase.getInstance();
-        db = Room.databaseBuilder(context,
-                        AppDB.class, "FooDB")
-                .allowMainThreadQueries().build();
-        chatListData = new ChatListData();
-        chatAPI = new ChatAPI();
-        chatItemDao = db.chatItemDao();
-        this.token = token;
+     db = Room.databaseBuilder(context,
+                     AppDB.class, "FooDB")
+             .allowMainThreadQueries().build();
+     chatListData = new ChatListData();
+     chatAPI = new ChatAPI(url);
+     chatItemDao = db.chatItemDao();
+     this.token = token;
 
     }
 
-    public ChatItemRepository(String token, String chatId, Context context, String username, User contact) {
+    public ChatItemRepository(String token,String chatId,Context context,String username,User contact,String url) {
 //    LocalDatabase db = LocalDatabase.getInstance();
         db = Room.databaseBuilder(context,
                         AppDB.class, "FooDB")
                 .allowMainThreadQueries().build();
-        chatAPI = new ChatAPI();
-        chatDao = db.chatDao();
+        chatAPI = new ChatAPI(url);
+        chatDao =  db.chatDao();
         this.username = username;
         this.chatId = chatId;
         this.token = token;
         this.contact = contact;
         chatListMessages = new ChatListMessages();
+    }
+    public void setChatApi(String url){
+        this.chatAPI = new ChatAPI(url);
     }
 
     class ChatListMessages extends MutableLiveData<List<Message>> {
@@ -101,24 +104,19 @@ public class ChatItemRepository {
 
 
     class ChatListData extends MutableLiveData<List<ChatListItem>> {
-        public ChatListData() {
-            super();
-        }
-
-        @Override
-        protected void onActive() {
-//            chatDao = db.chatDao();
-//            chatItemDao = db.chatItemDao();
-//            chatItemDao.deleteAllChatItems();
-//            chatDao.deleteAllChats();
-            chatItemsList = chatItemDao.index();
-            chatListData.setValue(chatItemsList);
-            super.onActive();
-            new Thread(() -> {
-                chatAPI.getChatsbyUsername(chatListData, token, chatItemDao);
-            }).start();
-        }
+    public ChatListData() {
+        super();
     }
+             @Override
+             protected void onActive() {
+                 chatItemsList = chatItemDao.index();
+                 chatListData.setValue(chatItemsList);
+                 super.onActive();
+                 new Thread(() ->{
+                     chatAPI.getChatsbyUsername(chatListData, token,chatItemDao);
+                 }).start();
+             }
+ }
 
     public LiveData<List<ChatListItem>> getAll() {
         return chatListData;

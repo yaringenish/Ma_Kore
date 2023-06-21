@@ -25,8 +25,9 @@ import java.io.IOException;
 public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding binding;
     private static final int REQUEST_IMAGE_PICK = 1;
-    private ChatAPI  chatAPI = new ChatAPI();
+    private ChatAPI  chatAPI;
 
+    private TextView url;
     private String selectPicture = "";
 
     @Override
@@ -34,8 +35,17 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        url = SharedViewSingleton.getInstance().getSharedTextView();
+        chatAPI = new ChatAPI(url.getText().toString());
         handleRegister();
         handleSelectImage();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setContentView(binding.getRoot());
+        chatAPI = new ChatAPI(url.getText().toString());
     }
 
     private void handleSelectImage() {

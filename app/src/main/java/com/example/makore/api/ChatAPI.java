@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.makore.R;
 import com.example.makore.apiObjects.AddContactRequestBody;
 import com.example.makore.apiObjects.AddMessageRequestBody;
 import com.example.makore.apiObjects.FireBaseTokenPostBody;
@@ -39,12 +40,12 @@ public class ChatAPI {
  Retrofit retrofit;
  WebServiceAPI webServiceAPI;
 
-     public ChatAPI() {
+     public ChatAPI(String url) {
     //            this.ChatListData = ChatListData;
     //            this.dao = dao;
 //         192.168.52.231
          retrofit = new Retrofit.Builder()
-                 .baseUrl("http://192.168.68.104:12345/")
+                 .baseUrl(url)
                  .callbackExecutor(Executors.newSingleThreadExecutor())
                  .addConverterFactory(GsonConverterFactory.create())
                  .build();

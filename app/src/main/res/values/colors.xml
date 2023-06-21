@@ -6,5 +6,5 @@
     <color name="inComing">#009688</color>
     <color name="Bar">#D6E3E9</color>
     <color name="divider">#D9E4EA</color>
-
+    <color name="grey_button_background">#808080</color>
 </resources>
