@@ -8,6 +8,7 @@ import com.example.makore.apiObjects.TokenRequestBody;
 import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
 import com.example.makore.entities.Message;
+import com.example.makore.entities.User;
 
 import java.util.List;
 
@@ -43,7 +44,7 @@ public interface WebServiceAPI {
  Call<Void> createUser (@Body RegisterRequestBody requestBody);
 
  @GET("Users/{username}")
- Call<Void> getUser(@Path("id") int id);
+ Call<User> getUser(@Path("id") int id);
 
  //checking if username and password are valid and then create token.
  @POST("Tokens")

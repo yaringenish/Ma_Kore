@@ -1,14 +1,21 @@
 package com.example.makore.entities;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.example.makore.typeconverters.DateTypeConverter;
 
 import java.util.Date;
 
 @Entity
 public class Message {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey @NonNull
     private String id;
+
+    @TypeConverters(DateTypeConverter.class) @ColumnInfo(name = "created")
     private Date created;
     private User sender;
     private String content;

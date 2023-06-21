@@ -27,6 +27,7 @@ import com.example.makore.databinding.ActivityAddContactBinding;
 import com.example.makore.databinding.ActivityCurrentChatBinding;
 import com.example.makore.entities.Chat;
 import com.example.makore.entities.Message;
+import com.example.makore.entities.User;
 import com.example.makore.viewmodels.ChatItemViewModel;
 
 import java.util.List;
@@ -38,7 +39,11 @@ public class CurrentChatActivity extends AppCompatActivity {
     private ChatItemViewModel viewModel;
     private String token;
     private String chatId;
-    private ChatAPI chatAPI = new ChatAPI();
+    private String contactUsername;
+    private String contactPicture;
+    private String contactDisplay;
+    private String username;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,19 +52,25 @@ public class CurrentChatActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         token = getIntent().getStringExtra("token");
         chatId = getIntent().getStringExtra("chatId");
+        username = getIntent().getStringExtra("username");
+        contactDisplay = getIntent().getStringExtra("otherUser");
+        contactPicture = getIntent().getStringExtra("picture");
+        contactUsername =getIntent().getStringExtra("otherUsername");
+        User contact = new User(contactUsername,contactDisplay,contactPicture);
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                 if (modelClass.isAssignableFrom(ChatItemViewModel.class)) {
-                    return (T) new ChatItemViewModel(getIntent().getStringExtra("token"),getIntent().getStringExtra("chatId"));
+
+                    return (T) new ChatItemViewModel(token,chatId,CurrentChatActivity.this,username,contact);
                 }
                 throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
             }
         }).get(ChatItemViewModel.class);
 
         RecyclerView messageListItems = findViewById(R.id.lstMessages);
-        final MessageListAdapter adapter = new MessageListAdapter(this, getIntent().getStringExtra("username"));
+        final MessageListAdapter adapter = new MessageListAdapter(this,username );
 
         TextView tvDisplayName = binding.userDisplayName;
         tvDisplayName.setText(getIntent().getStringExtra("otherUser"));

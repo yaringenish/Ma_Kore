@@ -19,6 +19,7 @@ import com.example.makore.adapters.ChatListAdapter;
 import com.example.makore.api.ChatAPI;
 import com.example.makore.apiObjects.FireBaseTokenPostBody;
 import com.example.makore.callbacks.GetChatCallBack;
+import com.example.makore.dao.ChatItemDao;
 import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
 import com.example.makore.viewmodels.ChatItemViewModel;
@@ -34,12 +35,18 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
     private ChatItemViewModel viewModel;
     private ChatAPI  chatAPI= new ChatAPI();
     private MutableLiveData<String> msgFrom = SingletonUpdate.getMsgFrom();
+
     private String token;
+
+    private  ChatListAdapter adapter;
+
     public void onItemClick(ChatListItem chatListItem) {
         Intent intent = new Intent(this, CurrentChatActivity.class);
         intent.putExtra("token", token);
         intent.putExtra("chatId",chatListItem.getId());
         intent.putExtra("otherUser", chatListItem.getDisplayName());
+        intent.putExtra("picture",chatListItem.getProfilePic());
+        intent.putExtra("otherUsername",chatListItem.getUser().getUsername());
         intent.putExtra("username", getIntent().getStringExtra("username"));
         startActivity(intent);
     }
@@ -53,7 +60,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                 if (modelClass.isAssignableFrom(ChatItemViewModel.class)) {
-                    return (T) new ChatItemViewModel(token);
+                    return (T) new ChatItemViewModel(token, ChatListActivity.this);
                 }
                 throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
             }
@@ -62,7 +69,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
 
 //        viewModel = new ViewModelProvider(this).get(ChatItemViewModel.class);
         RecyclerView lstChatItems = findViewById(R.id.lstChatItems);
-        final ChatListAdapter adapter = new ChatListAdapter(this);
+          adapter = new ChatListAdapter(this);
 
         lstChatItems.setAdapter(adapter);
         lstChatItems.setLayoutManager(new LinearLayoutManager(this));
@@ -89,6 +96,8 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
 
 
     }
+
+
 
 
     private void handleAddContact(){
