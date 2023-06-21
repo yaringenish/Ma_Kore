@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.makore.api.ChatAPI;
 import com.example.makore.apiObjects.LoginData;
@@ -17,11 +20,16 @@ public class LoginActivity extends AppCompatActivity {
     private String username;
     private String password;
 
-    private ChatAPI  chatAPI = new ChatAPI();
+    private ChatAPI  chatAPI;
+
+    TextView url;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
+
+        url = SharedViewSingleton.getInstance().getSharedTextView();
+        chatAPI = new ChatAPI(url.getText().toString());
         setContentView(binding.getRoot());
         handleLogin();
         handleRegister();
@@ -43,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                         intent.putExtra("token", ld.getToken());
                         intent.putExtra("username", ld.getUsername());
                         startActivity(intent);
+                        finish();
                     } else {
                         binding.tvLoginErrors.setText(R.string.usernameOrPassword);
                     }
@@ -50,6 +59,14 @@ public class LoginActivity extends AppCompatActivity {
             });
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setContentView(binding.getRoot());
+        chatAPI = new ChatAPI(url.getText().toString());
+    }
+
     private void handleRegister(){
         binding.btnLoginRegister.setOnClickListener(view -> {
             //start registerActivity

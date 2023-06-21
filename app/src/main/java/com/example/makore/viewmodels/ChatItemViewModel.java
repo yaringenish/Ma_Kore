@@ -20,12 +20,12 @@ public class ChatItemViewModel extends ViewModel {
     private LiveData<List<Message>> currentChatMessages;
 
     private Context context;
-     public ChatItemViewModel(String token, Context context){
-         mRepository = new ChatItemRepository(token,context);
+     public ChatItemViewModel(String token, Context context,String url){
+         mRepository = new ChatItemRepository(token,context,url);
          chatList = mRepository.getAll();
      }
-    public ChatItemViewModel(String token,String chatId,Context context,String username, User contact){
-        mRepository = new ChatItemRepository(token,chatId,context,username,contact);
+    public ChatItemViewModel(String token,String chatId,Context context,String username, User contact,String url){
+        mRepository = new ChatItemRepository(token,chatId,context,username,contact,url);
         chatList = mRepository.getAll();
         currentChatMessages = mRepository.getMessages();
     }
@@ -35,6 +35,10 @@ public class ChatItemViewModel extends ViewModel {
     }
     public LiveData<List<Message>> getCurrentChatMessages() {
         return currentChatMessages;
+    }
+
+    public void setChatApi(String url){
+         mRepository.setChatApi(url);
     }
 
     public void addMessage(AddMessageRequestBody requestBody){

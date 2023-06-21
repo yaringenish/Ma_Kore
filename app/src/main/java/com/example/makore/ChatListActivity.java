@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.makore.adapters.ChatListAdapter;
 import com.example.makore.api.ChatAPI;
@@ -34,6 +35,8 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
 
     private  ChatListAdapter adapter;
 
+    private TextView url;
+
     public void onItemClick(ChatListItem chatListItem) {
         Intent intent = new Intent(this, CurrentChatActivity.class);
         intent.putExtra("token", token);
@@ -49,30 +52,17 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
         token = getIntent().getStringExtra("token");
+        url = SharedViewSingleton.getInstance().getSharedTextView();
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                 if (modelClass.isAssignableFrom(ChatItemViewModel.class)) {
-                    return (T) new ChatItemViewModel(token, ChatListActivity.this);
+                    return (T) new ChatItemViewModel(token, ChatListActivity.this,url.getText().toString());
                 }
                 throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
             }
         }).get(ChatItemViewModel.class);
-//        viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
-//            @NonNull
-//            @Override
-//            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-//                if (modelClass.isAssignableFrom(ChatItemViewModel.class)) {
-//                    return (T) new ChatItemViewModel(token);
-//                }
-//                throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
-//            }
-//        }).get(ChatItemViewModel.class);
-
-
-
-//        viewModel = new ViewModelProvider(this).get(ChatItemViewModel.class);
         RecyclerView lstChatItems = findViewById(R.id.lstChatItems);
           adapter = new ChatListAdapter(this);
 
@@ -86,16 +76,29 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
         });
 
         handleAddContact();
+        handleSettings();
     }
 
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.setChatApi(url.getText().toString());
+    }
 
     private void handleAddContact(){
         FloatingActionButton btn = findViewById(R.id.btnAddContact);
         btn.setOnClickListener(view -> {
             Intent intent = new Intent(this, AddContactActivity.class);
             intent.putExtra("token", getIntent().getStringExtra("token"));
+            startActivity(intent);
+        });
+
+    }
+
+    private void handleSettings(){
+        Button btn = findViewById(R.id.btnSettings);
+        btn.setOnClickListener(view -> {
+            Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         });
 

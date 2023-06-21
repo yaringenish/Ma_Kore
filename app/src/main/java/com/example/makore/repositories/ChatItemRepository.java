@@ -44,30 +44,33 @@ private ChatListMessages chatListMessages;
     private User contact;
     private User user;
 
- public ChatItemRepository(String token,Context context) {
+ public ChatItemRepository(String token,Context context,String url) {
 //    LocalDatabase db = LocalDatabase.getInstance();
      db = Room.databaseBuilder(context,
                      AppDB.class, "FooDB")
              .allowMainThreadQueries().build();
      chatListData = new ChatListData();
-     chatAPI = new ChatAPI();
+     chatAPI = new ChatAPI(url);
      chatItemDao = db.chatItemDao();
      this.token = token;
 
     }
 
-    public ChatItemRepository(String token,String chatId,Context context,String username,User contact) {
+    public ChatItemRepository(String token,String chatId,Context context,String username,User contact,String url) {
 //    LocalDatabase db = LocalDatabase.getInstance();
         db = Room.databaseBuilder(context,
                         AppDB.class, "FooDB")
                 .allowMainThreadQueries().build();
-        chatAPI = new ChatAPI();
+        chatAPI = new ChatAPI(url);
         chatDao =  db.chatDao();
         this.username = username;
         this.chatId = chatId;
         this.token = token;
         this.contact = contact;
         chatListMessages = new ChatListMessages();
+    }
+    public void setChatApi(String url){
+        this.chatAPI = new ChatAPI(url);
     }
 
     class ChatListMessages extends MutableLiveData<List<Message>>{
@@ -127,9 +130,10 @@ private ChatListMessages chatListMessages;
         }).start();
 
     }
-         public void reload() {
+         public void reload(String msgName) {
              chatAPI.getChatsbyUsername(chatListData, token,chatItemDao);
-
+             if(contact.getUsername() == msgName);
+             chatAPI.getChat(chatListMessages, token,chatId,chatDao,currentChat);
         }
 
     }
