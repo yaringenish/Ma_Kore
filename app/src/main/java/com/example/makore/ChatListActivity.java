@@ -2,6 +2,7 @@ package com.example.makore;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,6 +33,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
 
     private ChatItemViewModel viewModel;
     private ChatAPI  chatAPI= new ChatAPI();
+    private MutableLiveData<String> msgFrom = SingletonUpdate.getMsgFrom();
     private String token;
     public void onItemClick(ChatListItem chatListItem) {
         Intent intent = new Intent(this, CurrentChatActivity.class);
@@ -71,6 +73,10 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
             adapter.setChatListItems(chatListItems);
         });
 
+        msgFrom.observe(this, msgName -> {
+            viewModel.reload(msgName);
+        });
+
         handleAddContact();
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(ChatListActivity.this,
@@ -79,6 +85,9 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
                     String username = getIntent().getStringExtra("username");
                     chatAPI.saveFireBaseToken(username, fireBaseToken);
                 });
+
+
+
     }
 
 

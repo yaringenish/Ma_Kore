@@ -179,7 +179,6 @@ public class ChatAPI {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                int a = 7;
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {

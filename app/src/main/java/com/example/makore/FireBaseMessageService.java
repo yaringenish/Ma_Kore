@@ -2,6 +2,7 @@ package com.example.makore;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -15,11 +16,16 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Map;
+
 public class FireBaseMessageService extends FirebaseMessagingService {
+
+    private MutableLiveData<String> msgFrom = SingletonUpdate.getMsgFrom();
     public FireBaseMessageService() {
     }
 
@@ -27,16 +33,47 @@ public class FireBaseMessageService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         if (remoteMessage.getNotification() != null) {
             createNotificationChannel();
+            String token = "";
+            String chatId = "";
+            String otherUser = "";
+            String username = "";
+            Map<String, String> data = remoteMessage.getData();
+            if (data.containsKey("token")) {
+                token = data.get("token");
+            }
+            if (data.containsKey("chatId")) {
+                chatId= data.get("chatId");
+            }
+            if (data.containsKey("otherUser")) {
+                otherUser= data.get("otherUser");
+            }
+            if (data.containsKey("username")) {
+                username= data.get("username");
+            }
+
+            msgFrom.postValue(otherUser);
+
+
+            Intent intent = new Intent(this, CurrentChatActivity.class);
+            intent.putExtra("token", token);
+            intent.putExtra("chatId", chatId);
+            intent.putExtra("otherUser", otherUser);
+            intent.putExtra("username", username);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1")
                     .setSmallIcon(R.drawable.ic_check_icon)
                     .setContentTitle(remoteMessage.getNotification().getTitle())
                     .setContentText(remoteMessage.getNotification().getBody())
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
 
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
 
-            
+
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }

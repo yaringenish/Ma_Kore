@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -33,7 +34,7 @@ import java.util.List;
 
 public class CurrentChatActivity extends AppCompatActivity {
     private ActivityCurrentChatBinding binding;
-
+    private MutableLiveData<String> msgFrom = SingletonUpdate.getMsgFrom();
     private ChatItemViewModel viewModel;
     private String token;
     private String chatId;
@@ -64,14 +65,19 @@ public class CurrentChatActivity extends AppCompatActivity {
         tvDisplayName.setText(getIntent().getStringExtra("otherUser"));
         messageListItems.setAdapter(adapter);
         messageListItems.setLayoutManager(new LinearLayoutManager(this));
-//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
-//        messageListItems.addItemDecoration(dividerItemDecoration);
+
 
 
         viewModel.getCurrentChatMessages().observe(this, messages -> {
             adapter.setMessageListItems(messages);
         });
         handleSend();
+
+        msgFrom.observe(this, msgName -> {
+            viewModel.reload(msgName);
+        });
+
+
 
     }
 

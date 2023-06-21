@@ -104,9 +104,9 @@ private ChatListMessages chatListMessages;
 //            api.delete(chatItem);
 //     }
 //
-//         public void reload() {
-//             api.get();
-//        }
+         public void reload(String msgName) {
+             // do something
+        }
 
     }
 
