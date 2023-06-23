@@ -3,10 +3,12 @@ package com.example.makore.viewmodels;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 
 import com.example.makore.apiObjects.AddMessageRequestBody;
+import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
 import com.example.makore.entities.Message;
 import com.example.makore.entities.User;
@@ -53,5 +55,9 @@ public class ChatItemViewModel extends ViewModel {
 //    }
     public void reload(String msgName, int type){
         mRepository.reload(msgName, type);
+    }
+
+    public void getChatForPicture(String token, String chatId, String username, MutableLiveData<String> otherUserPicture) {
+         mRepository.getChatForPicture(token, chatId, username, otherUserPicture);
     }
 }

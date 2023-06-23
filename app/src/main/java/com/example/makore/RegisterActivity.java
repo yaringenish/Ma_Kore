@@ -21,6 +21,7 @@ import com.example.makore.databinding.ActivityRegisterBinding;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding binding;
@@ -86,7 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            RegisterRequestBody requestBody = new RegisterRequestBody(userName,password,displayName,"stam");
+            RegisterRequestBody requestBody = new RegisterRequestBody(userName,password,displayName,selectPicture);
             chatAPI.createUser(requestBody,  new RegisterCallBack() {
                 @Override
                 public void onRegisterResponse(int status) {
@@ -103,6 +104,9 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
+
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -118,7 +122,7 @@ public class RegisterActivity extends AppCompatActivity {
                 byte[] imageBytes = byteArrayOutputStream.toByteArray();
 
                 String base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-                selectPicture = base64Image;
+                selectPicture = "data:image/jpeg;base64," + base64Image;
 
                 // Use the bitmap as needed (e.g., display in ImageView)
                 binding.ivSelectedImage.setImageBitmap(bitmap);

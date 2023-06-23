@@ -52,4 +52,8 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="BaseUrl">http://10.0.2.2:12345/</string>
+    <string name="enter_new_url">Enter new url</string>
+    <string name="change_url">Change Url</string>
+    <string name="url_change">Url Change</string>
+    <string name="theme_change">Theme Change</string>
 </resources>

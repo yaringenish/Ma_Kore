@@ -170,6 +170,24 @@ public class ChatAPI {
     }
 
 
+    public void getChatForPicture(String token, String chatId, String username, MutableLiveData<String> otherUserPicture){
+        Call<Chat> call = webServiceAPI.getChatById(("Bearer " + token),chatId);
+        call.enqueue(new Callback<Chat>() {
+            @Override
+            public void onResponse(Call<Chat> call, Response<Chat> response) {
+                Chat chat = response.body();
+                User candid = chat.getUsers()[0].getUsername().equals(username) ? chat.getUsers()[0] : chat.getUsers()[1];
+                String pictureString = candid.getProfilePic();
+                otherUserPicture.postValue(pictureString);
+            }
+            @Override
+            public void onFailure(Call<Chat> call, Throwable t) {
+                Log.e("api", "Request failed: " + t.getMessage(), t);
+            }
+        });
+    }
+
+
     public void addMessage(MutableLiveData<List<Message>> chatListMessages , String token , String chatId ,
                            AddMessageRequestBody requestBody,ChatDao chatDao , Chat currentChat , String username , User contact1){
         Call<Message> call = webServiceAPI.addMessage(("Bearer " + token),chatId,requestBody);

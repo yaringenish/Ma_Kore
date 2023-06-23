@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                         intent.putExtra("token", ld.getToken());
                         intent.putExtra("username", ld.getUsername());
                         startActivity(intent);
-                        finish();
+//                        finish();
                     } else {
                         binding.tvLoginErrors.setText(R.string.usernameOrPassword);
                     }

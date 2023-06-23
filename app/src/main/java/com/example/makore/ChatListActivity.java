@@ -33,7 +33,7 @@ import java.util.List;
 public class ChatListActivity extends AppCompatActivity implements ChatListAdapter.OnItemClickListener{
     private static String currentUsername;
     private ChatItemViewModel viewModel;
-    private ChatAPI  chatAPI= new ChatAPI();
+
     private MutableLiveData<String> msgFrom = SingletonUpdate.getMsgFrom();
 
     private String token;
@@ -41,6 +41,8 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
     private  ChatListAdapter adapter;
 
     private TextView url;
+
+    private ChatAPI chatAPI;
 
     public void onItemClick(ChatListItem chatListItem) {
         Intent intent = new Intent(this, CurrentChatActivity.class);
@@ -59,6 +61,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
         currentUsername = getIntent().getStringExtra("username");
         token = getIntent().getStringExtra("token");
         url = SharedViewSingleton.getInstance().getSharedTextView();
+        chatAPI = new ChatAPI(url.getText().toString());
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
@@ -90,7 +93,6 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
 
         handleAddContact();
         handleSettings();
-    }
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(ChatListActivity.this,
                 instanceIdResult -> {
@@ -98,6 +100,9 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
                     String username = getIntent().getStringExtra("username");
                     chatAPI.saveFireBaseToken(username, fireBaseToken);
                 });
+    }
+
+
 
 
 
@@ -106,7 +111,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
         super.onResume();
         viewModel.setChatApi(url.getText().toString());
     }
-    }
+
 
     public static  String getCurrentUsername() {
         return currentUsername;

@@ -33,10 +33,12 @@ public class FireBaseMessageService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         if (remoteMessage.getNotification() != null) {
             createNotificationChannel();
+            String otherUsername = "";
             String token = "";
             String chatId = "";
             String otherUser = "";
             String username = "";
+            String picture = "";
             Map<String, String> data = remoteMessage.getData();
             if (data.containsKey("token")) {
                 token = data.get("token");
@@ -50,6 +52,12 @@ public class FireBaseMessageService extends FirebaseMessagingService {
             if (data.containsKey("username")) {
                 username= data.get("username");
             }
+            if (data.containsKey("otherUsername")) {
+                otherUsername = data.get("otherUsername");
+            }
+            if (data.containsKey("picture")) {
+                picture = data.get("picture");
+            }
 
             msgFrom.postValue(otherUser);
 
@@ -59,6 +67,8 @@ public class FireBaseMessageService extends FirebaseMessagingService {
             intent.putExtra("chatId", chatId);
             intent.putExtra("otherUser", otherUser);
             intent.putExtra("username", username);
+            intent.putExtra("picture", picture);
+            intent.putExtra("otherUsername", otherUsername);
 
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -78,7 +88,7 @@ public class FireBaseMessageService extends FirebaseMessagingService {
                 return;
             }
             String currentUsername = ChatListActivity.getCurrentUsername();
-            if(!currentUsername.equals(otherUser)) {
+            if(!currentUsername.equals(otherUser) && currentUsername.equals(username)) {
                 notificationManagerCompat.notify(1, builder.build());
             }
         }

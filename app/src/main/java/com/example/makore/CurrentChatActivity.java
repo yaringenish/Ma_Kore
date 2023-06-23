@@ -40,6 +40,7 @@ import java.util.List;
 public class CurrentChatActivity extends AppCompatActivity {
     private ActivityCurrentChatBinding binding;
     private MutableLiveData<String> msgFrom = SingletonUpdate.getMsgFrom();
+    private MutableLiveData<String> otherUserPicture = new MutableLiveData<>() ;
     private ChatItemViewModel viewModel;
     private String token;
     private String chatId;
@@ -60,7 +61,8 @@ public class CurrentChatActivity extends AppCompatActivity {
         username = getIntent().getStringExtra("username");
         contactDisplay = getIntent().getStringExtra("otherUser");
         contactPicture = getIntent().getStringExtra("picture");
-        contactUsername = getIntent().getStringExtra("otherUsername");
+
+        contactUsername = getIntent().getStringExtra("otherUser");
         url = SharedViewSingleton.getInstance().getSharedTextView();
         User contact = new User(contactUsername,contactDisplay,contactPicture);
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
@@ -83,14 +85,19 @@ public class CurrentChatActivity extends AppCompatActivity {
         messageListItems.setAdapter(adapter);
         messageListItems.setLayoutManager(new LinearLayoutManager(this));
 
+        if(!contactPicture.equals("")) {
+            String base64String = contactPicture;
+            String base64Image = base64String.split(",")[1];
+            byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
-        String base64String = contactPicture;
-        String base64Image = base64String.split(",")[1];
-        byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            ImageView userPictureIv = binding.userPicture;
+            userPictureIv.setImageBitmap(decodedByte);
+        } else {
+            ImageView userPictureIv = binding.userPicture;
+            userPictureIv.setImageResource(0);
+        }
 
-        ImageView userPictureIv = binding.userPicture;
-        userPictureIv.setImageBitmap(decodedByte);
 
 
         viewModel.getCurrentChatMessages().observe(this, messages -> {
@@ -101,6 +108,23 @@ public class CurrentChatActivity extends AppCompatActivity {
         msgFrom.observe(this, msgName -> {
             viewModel.reload(msgName, 2);
         });
+
+        otherUserPicture.observe(this, otherUserPicture -> {
+            String base64String1 = otherUserPicture;
+            String base64Image1 = base64String1.split(",")[1];
+            byte[] decodedString1 = Base64.decode(base64Image1, Base64.DEFAULT);
+            Bitmap decodedByte1 = BitmapFactory.decodeByteArray(decodedString1, 0, decodedString1.length);
+
+            ImageView userPictureIv1 = binding.userPicture;
+            userPictureIv1.setImageBitmap(decodedByte1);
+        });
+
+        if(contactPicture.equals("")) {
+            new Thread(() -> {
+                viewModel.getChatForPicture(token,chatId ,contactDisplay, otherUserPicture);
+            }).start();
+        }
+
 
 
 

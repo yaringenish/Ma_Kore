@@ -109,6 +109,9 @@ public class ChatItemRepository {
     }
              @Override
              protected void onActive() {
+                 chatItemDao.deleteAllChatItems();
+                 chatDao = db.chatDao();
+                 chatDao.deleteAllChats();
                  chatItemsList = chatItemDao.index();
                  chatListData.setValue(chatItemsList);
                  super.onActive();
@@ -154,6 +157,10 @@ public class ChatItemRepository {
 
     public void deleteAllChats() {
         chatDao.deleteAllChats();
+    }
+
+    public void getChatForPicture(String token, String chatId, String username, MutableLiveData<String> otherUserPicture) {
+        chatAPI.getChatForPicture(token, chatId, username, otherUserPicture);
     }
 }
 

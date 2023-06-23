@@ -27,7 +27,7 @@ public class AddContactActivity extends AppCompatActivity {
         binding = ActivityAddContactBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         url = SharedViewSingleton.getInstance().getSharedTextView();
-        chatAPI = new ChatAPI(findViewById(R.id.url).toString());
+        chatAPI = new ChatAPI(url.getText().toString());
         handleBack();
         handleAddContact();
     }
