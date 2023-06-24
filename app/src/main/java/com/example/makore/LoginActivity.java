@@ -20,6 +20,8 @@ import com.google.firebase.iid.InstanceIdResult;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
+//    private ActivityLoginBinding binding;
+//    private ActivityLoginBinding binding;
     private String username;
     private String password;
 
@@ -40,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleLogin() {
         binding.btnLogin.setOnClickListener(view -> {
-            setContentView(R.layout.connecting);
+//            setContentView(R.layout.connecting);
             username = binding.etLoginUsername.getText().toString();
             password = binding.etLoginPassword.getText().toString();
 
@@ -56,7 +58,10 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
 //                        finish();
                     } else {
+
+//                        setContentView(R.layout.activity_login);
                         binding.tvLoginErrors.setText(R.string.usernameOrPassword);
+
                     }
                 }
             });
@@ -66,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        setContentView(binding.getRoot());
+//        setContentView(binding.getRoot());
         chatAPI = new ChatAPI(url.getText().toString());
     }
 

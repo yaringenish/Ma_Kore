@@ -42,7 +42,17 @@ tools:context=".CurrentChatActivity">
             android:layout_height="45dp"
             android:layout_marginStart="35dp"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/btnSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_gravity="end|center_vertical"
+            android:text="@string/settings" />
 
     </LinearLayout>
 
@@ -54,17 +64,19 @@ tools:context=".CurrentChatActivity">
         android:background="@color/divider" />
 
 
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    android:id="@+id/refreshLayout"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/lstMessages"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lstMessages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -79,14 +91,14 @@ tools:context=".CurrentChatActivity">
             android:id="@+id/sendBar"
             android:layout_width="324dp"
             android:layout_height="wrap_content"
-            android:hint="Type a message..."
+            android:hint="@string/type_a_message"
             android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/btnSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send" />
+            android:text="@string/send" />
 
     </LinearLayout>
 

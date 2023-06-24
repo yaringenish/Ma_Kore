@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -104,6 +105,7 @@ public class CurrentChatActivity extends AppCompatActivity {
             adapter.setMessageListItems(messages);
         });
         handleSend();
+        handleSettings();
 
         msgFrom.observe(this, msgName -> {
             viewModel.reload(msgName, 2);
@@ -143,5 +145,13 @@ public class CurrentChatActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         viewModel.setChatApi(url.getText().toString());
+    }
+
+    private void handleSettings(){
+        Button btn = findViewById(R.id.btnSettings);
+        btn.setOnClickListener(view -> {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        });
     }
 }

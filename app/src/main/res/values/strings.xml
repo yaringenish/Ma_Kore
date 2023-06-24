@@ -56,4 +56,7 @@
     <string name="change_url">Change Url</string>
     <string name="url_change">Url Change</string>
     <string name="theme_change">Theme Change</string>
+    <string name="type_a_message">Type a message...</string>
+    <string name="send">Send</string>
+    <string name="settings">Settings</string>
 </resources>
