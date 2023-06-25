@@ -1,6 +1,7 @@
 package com.example.makore;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import com.example.makore.api.ChatAPI;
 import com.example.makore.apiObjects.LoginData;
 import com.example.makore.apiObjects.TokenRequestBody;
 import com.example.makore.callbacks.TokenCallback;
+import com.example.makore.dao.ChatDao;
+import com.example.makore.dao.ChatItemDao;
 import com.example.makore.databinding.ActivityLoginBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -27,10 +30,15 @@ public class LoginActivity extends AppCompatActivity {
     private String password;
 
     private ChatAPI  chatAPI;
-
+    private AppDB db;
+    private ChatItemDao chatItemDao ;
+    private ChatDao chatDao ;
     TextView url;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        db = Room.databaseBuilder(this.getApplicationContext(),
+                        AppDB.class, "FooDB")
+                .allowMainThreadQueries().build();
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
 
@@ -44,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleLogin() {
         binding.btnLogin.setOnClickListener(view -> {
-//            setContentView(R.layout.connecting);
+
             username = binding.etLoginUsername.getText().toString();
             password = binding.etLoginPassword.getText().toString();
 
@@ -54,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onTokenReceived(LoginData ld) {
                     if(ld.getToken() != null) {
+//                        setContentView(R.layout.connecting);
                         Intent intent = new Intent(LoginActivity.this, ChatListActivity.class);
                         intent.putExtra("token", ld.getToken());
                         intent.putExtra("username", ld.getUsername());
@@ -73,7 +82,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        setContentView(binding.getRoot());
+//        setContentView(R.layout.activity_login);
+        chatItemDao = db.chatItemDao();
+        chatDao =  db.chatDao();
+        chatItemDao.deleteAllChatItems();
+        chatDao.deleteAllChats();
         binding.tvLoginErrors.setText("");
         binding.etLoginUsername.setText("");
         binding.etLoginPassword.setText("");

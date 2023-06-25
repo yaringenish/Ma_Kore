@@ -46,11 +46,11 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 //        setContentView(binding.getRoot());
-        binding.tvRegisterErrors.setText("");
-        binding.etRegisterPassword.setText("");
-        binding.etRegisterUsername.setText("");
-        binding.etRegisterSamePassword.setText("");
-        binding.etRegisterDisplayName.setText("");
+//        binding.tvRegisterErrors.setText("");
+//        binding.etRegisterPassword.setText("");
+//        binding.etRegisterUsername.setText("");
+//        binding.etRegisterSamePassword.setText("");
+//        binding.etRegisterDisplayName.setText("");
         chatAPI = new ChatAPI(url.getText().toString());
     }
 
