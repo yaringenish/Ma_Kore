@@ -13,10 +13,9 @@ import java.util.List;
 
 public class LoginRepository {
 
-    private ChatAPI api;
     private LoginData loginData;
     public LoginRepository(){
-        api = new ChatAPI();
+
         loginData = new LoginData();
     }
     class LoginInfo extends MutableLiveData<LoginData> {
@@ -29,8 +28,8 @@ public class LoginRepository {
         @Override
         protected void onActive() {
             super.onActive();
-//                 new Thread(()->{ChatListData.postValue(dao.get());}).start();
         }
+//                 new Thread(()->{ChatListData.postValue(dao.get());}).start();
     }
 //    public LiveData<LoginData> login(String username , String password) {
 //       loginData =  api.getToken(username,password);

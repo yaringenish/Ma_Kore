@@ -1,88 +1,164 @@
 package com.example.makore.repositories;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.room.Room;
 
+import com.example.makore.AppDB;
 import com.example.makore.R;
 import com.example.makore.api.ChatAPI;
+import com.example.makore.apiObjects.AddMessageRequestBody;
+import com.example.makore.callbacks.GetChatCallBack;
+import com.example.makore.dao.ChatDao;
+import com.example.makore.dao.ChatDao_Impl;
+import com.example.makore.dao.ChatItemDao;
+import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
+import com.example.makore.entities.Message;
+import com.example.makore.entities.User;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class ChatItemRepository {
-//private ChatItemDao dao;
-private ChatListData ChatListData;
-//private ChatAPI api;
+
+    private ChatListData chatListData;
+
+    private ChatListMessages chatListMessages;
+    private AppDB db;
     private String token;
 
- public ChatItemRepository(String token) {
+    private String username;
+    private String chatId;
+    private ChatDao chatDao;
+    private ChatItemDao chatItemDao;
+    private ChatAPI chatAPI;
+
+    private Chat currentChat = new Chat(null, null);
+    private List<Message> chatMessages;
+
+    private List<ChatListItem> chatItemsList;
+
+    private User contact;
+    private User user;
+
+ public ChatItemRepository(String token,Context context,String url) {
 //    LocalDatabase db = LocalDatabase.getInstance();
-//    dao = db.ChatDao(); // getting data from local storage
-    ChatListData = new ChatListData();
-    this.token = token;
-//    api = new ChatAPI(ChatListData, dao); // getting data from server
+     db = Room.databaseBuilder(context,
+                     AppDB.class, "FooDB")
+             .allowMainThreadQueries().build();
+     chatListData = new ChatListData();
+     chatAPI = new ChatAPI(url);
+     chatItemDao = db.chatItemDao();
+     this.token = token;
+
+    }
+
+    public ChatItemRepository(String token,String chatId,Context context,String username,User contact,String url) {
+//    LocalDatabase db = LocalDatabase.getInstance();
+        db = Room.databaseBuilder(context,
+                        AppDB.class, "FooDB")
+                .allowMainThreadQueries().build();
+        chatAPI = new ChatAPI(url);
+        chatDao =  db.chatDao();
+        this.username = username;
+        this.chatId = chatId;
+        this.token = token;
+        this.contact = contact;
+        chatListMessages = new ChatListMessages();
+    }
+    public void setChatApi(String url){
+        this.chatAPI = new ChatAPI(url);
+    }
+
+    class ChatListMessages extends MutableLiveData<List<Message>> {
+        public ChatListMessages() {
+            super();
+        }
+
+        @Override
+        protected void onActive() {
+            super.onActive();
+            //from Dao
+            Chat stam = new Chat(null, null);
+            currentChat = chatDao.get(chatId);
+
+            if (currentChat != null) {
+                chatMessages = new LinkedList<>();
+                for (int i = 0; i < currentChat.getMessages().length; i++) {
+                    chatMessages.add(currentChat.getMessages()[i]);
+                }
+                chatListMessages.setValue(chatMessages);
+            } else {
+                currentChat = new Chat(null, null);
+            }
+            new Thread(() -> {
+                chatAPI.getChat(chatListMessages, token, chatId, chatDao, currentChat);
+            }).start();
+        }
+
     }
 
 
     class ChatListData extends MutableLiveData<List<ChatListItem>> {
     public ChatListData() {
         super();
-        List<ChatListItem> s = new LinkedList<>();
-//        s.add(new ChatListItem("roi", R.drawable.ic_check, "aaaa"));
-//        s.add(new ChatListItem("roi2", R.drawable.ic_check, "aaaa2"));
-//        s.add(new ChatListItem("roi3", R.drawable.ic_check, "aaaa3"));
-//        s.add(new ChatListItem("roi4", R.drawable.ic_check, "aaaa4"));
-//        s.add(new ChatListItem("roi5", R.drawable.ic_check, "aaaa5"));
-//        s.add(new ChatListItem("roi6", R.drawable.ic_check, "aaaa6"));
-//        s.add(new ChatListItem("roi7", R.drawable.ic_check, "aaaa7"));
-//        s.add(new ChatListItem("roi8", R.drawable.ic_check, "aaaa8"));
-//        s.add(new ChatListItem("roi9", R.drawable.ic_check, "aaaa9"));
-//        s.add(new ChatListItem("roi10", R.drawable.ic_check, "aaaa10"));
-//        s.add(new ChatListItem("roi11", R.drawable.ic_check, "aaaa11"));
-//        s.add(new ChatListItem("roi12", R.drawable.ic_check, "aaaa12"));
-//        s.add(new ChatListItem("roi13", R.drawable.ic_check, "aaaa13"));
-//        s.add(new ChatListItem("roi14", R.drawable.ic_check, "aaaa14"));
-//        s.add(new ChatListItem("roi15", R.drawable.ic_check, "aaaa15"));
-//        s.add(new ChatListItem("roi16", R.drawable.ic_check, "aaaa16"));
-//        s.add(new ChatListItem("roi17", R.drawable.ic_check, "aaaa17"));
-//        s.add(new ChatListItem("roi18", R.drawable.ic_check, "aaaa18"));
-//        s.add(new ChatListItem("roi19", R.drawable.ic_check, "aaaa19"));
-//        s.add(new ChatListItem("roi20", R.drawable.ic_check, "aaaa20"));
-//        setValue(s);
-//        setValue(new LinkedList<>());
-//        ChatAPI chatAPI = new ChatAPI();
-        //and doing everything that needs to get all the chatListItems.
     }
-
              @Override
              protected void onActive() {
+
+                 chatItemsList = chatItemDao.index();
+                 chatListData.setValue(chatItemsList);
                  super.onActive();
                  new Thread(() ->{
-                     ChatAPI chatAPI = new ChatAPI();
-                     chatAPI.getChatsbyUsername(ChatListData, token);
-                     Log.i("here", "gere");
+                     chatAPI.getChatsbyUsername(chatListData, token,chatItemDao);
                  }).start();
-//                 new Thread(()->{ChatListData.postValue(dao.get());}).start();
              }
  }
-    public LiveData <List<ChatListItem>> getAll() {
-        return ChatListData;
+
+    public LiveData<List<ChatListItem>> getAll() {
+        return chatListData;
+    }
+
+    public LiveData<List<Message>> getMessages() {
+        return chatListMessages;
+    }
+
+    public void addMessage(AddMessageRequestBody requestBody) {
+        new Thread(() -> {
+            chatAPI.addMessage(chatListMessages, token, chatId, requestBody, chatDao, currentChat, this.username, contact);
+        }).start();
 
     }
-//    public void add(final ChatListItem chatItem) {
-//            api.add(chatItem);
+
+    //    public void addChatItem(final ChatListItem chatItem) {
+//            api.addChat(chatItem);
 //        }
 //
 //       public void delete(final ChatListItem chatItem) {
 //            api.delete(chatItem);
 //     }
 //
-//         public void reload() {
-//             api.get();
-//        }
-
+    public void reload(String msgName , int type) {
+        if(type == 1) {
+            chatAPI.getChatsbyUsername(chatListData, token, chatItemDao);
+        } else {
+            if (contact.getUsername().equals(msgName)) {
+                chatAPI.getChat(chatListMessages, token, chatId, chatDao, currentChat);
+            }
+        }
     }
+
+
+    public void deleteAllChats() {
+        chatDao.deleteAllChats();
+    }
+
+    public void getChatForPicture(String token, String chatId, String username, MutableLiveData<String> otherUserPicture) {
+        chatAPI.getChatForPicture(token, chatId, username, otherUserPicture);
+    }
+}
 

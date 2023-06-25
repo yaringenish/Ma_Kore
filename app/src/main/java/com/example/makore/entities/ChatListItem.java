@@ -1,15 +1,34 @@
 package com.example.makore.entities;
 
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 @Entity
 public class ChatListItem {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey @NonNull
     private String id;
+
     private User user;
     private String lastMessage;
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+    }
 
     public ChatListItem(User user, String lastMessage) {
         this.user = user;
@@ -21,6 +40,13 @@ public class ChatListItem {
         this.user.setProfilePic("picture");
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
 
     public String getDisplayName() {
         return this.user.getDisplayName();
@@ -43,7 +69,11 @@ public class ChatListItem {
     }
 
     public void setlastMessage(String lstMsg) {
-        this.lastMessage = lastMessage;
+        this.lastMessage = lstMsg;
+    }
+
+    public void setLstMsg(Message message){
+        this.lastMessage = "";
     }
 }
 

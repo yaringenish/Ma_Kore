@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     private String token;
@@ -13,16 +14,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TextView url =findViewById(R.id.url);
+        url.setText("http://10.0.2.2:12345");
+        SharedViewSingleton.getInstance().setSharedTextView(url);
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-
-//        Intent intent = new Intent(this, ChatListActivity.class);
-//        startActivity(intent);
+        finish();
 
     }
 }
 
 
-
-//    Intent intent = new Intent(this, LoginActivity.class);
-//    startActivity(intent);

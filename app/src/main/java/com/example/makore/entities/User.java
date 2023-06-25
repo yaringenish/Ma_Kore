@@ -1,7 +1,12 @@
 package com.example.makore.entities;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity
 public class User {
+    @PrimaryKey @NonNull
     private String username;
     private String displayName;
     private String profilePic;
