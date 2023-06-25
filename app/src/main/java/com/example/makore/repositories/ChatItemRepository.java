@@ -81,7 +81,6 @@ private ChatListMessages chatListMessages;
         protected void onActive() {
             super.onActive();
             //from Dao
-            Chat stam = new Chat(null,null);
             currentChat = chatDao.get(chatId);
 
             if(currentChat != null) {

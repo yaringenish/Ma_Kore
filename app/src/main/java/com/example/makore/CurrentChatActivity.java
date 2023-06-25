@@ -97,8 +97,8 @@ public class CurrentChatActivity extends AppCompatActivity {
         });
     }
 
-    protected void onResume() {
-        super.onResume();
-        viewModel.setChatApi(url.getText().toString());
-    }
+//    protected void onResume() {
+//        super.onResume();
+//        viewModel.setChatApi(url.getText().toString());
+//    }
 }
