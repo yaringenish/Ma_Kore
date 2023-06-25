@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TextView url =findViewById(R.id.url);
-        url.setText("http://192.168.68.104:12345");
+        url.setText("http://10.0.0.25:12345");
         SharedViewSingleton.getInstance().setSharedTextView(url);
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
