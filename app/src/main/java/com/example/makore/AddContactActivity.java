@@ -34,6 +34,7 @@ public class AddContactActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        binding.tvAddContactErrors.setText("");
         chatAPI = new ChatAPI(url.getText().toString());
     }
 
@@ -41,6 +42,10 @@ public class AddContactActivity extends AppCompatActivity {
         binding.btnAddContact.setOnClickListener(view -> {
             username = binding.etAddContactUsername.getText().toString();
             token = getIntent().getStringExtra("token");
+            if(username.equals(getIntent().getStringExtra("username"))) {
+                binding.tvAddContactErrors.setText("You cannot add yourself to the chats list");
+                return;
+            }
 
             chatAPI.addContact(username, token, new AddContactCallback() {
                 @Override

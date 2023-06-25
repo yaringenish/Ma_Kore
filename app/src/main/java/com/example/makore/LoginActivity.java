@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.makore.api.ChatAPI;
@@ -38,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         handleLogin();
         handleRegister();
+        handleSettings();
     }
 
     private void handleLogin() {
@@ -72,6 +74,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 //        setContentView(binding.getRoot());
+        binding.tvLoginErrors.setText("");
+        binding.etLoginUsername.setText("");
+        binding.etLoginPassword.setText("");
         chatAPI = new ChatAPI(url.getText().toString());
     }
 
@@ -83,5 +88,13 @@ public class LoginActivity extends AppCompatActivity {
             //no need for finish because when finishing register will return to here.
         });
 
+    }
+
+    private void handleSettings(){
+        Button btn = findViewById(R.id.btnSettings);
+        btn.setOnClickListener(view -> {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        });
     }
 }

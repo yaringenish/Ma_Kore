@@ -123,6 +123,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
         btn.setOnClickListener(view -> {
             Intent intent = new Intent(this, AddContactActivity.class);
             intent.putExtra("token", getIntent().getStringExtra("token"));
+            intent.putExtra("username", getIntent().getStringExtra("username"));
             startActivity(intent);
         });
 

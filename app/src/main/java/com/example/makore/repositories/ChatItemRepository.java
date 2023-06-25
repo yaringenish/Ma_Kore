@@ -109,9 +109,9 @@ public class ChatItemRepository {
     }
              @Override
              protected void onActive() {
-                 chatItemDao.deleteAllChatItems();
-                 chatDao = db.chatDao();
-                 chatDao.deleteAllChats();
+//                 chatItemDao.deleteAllChatItems();
+//                 chatDao = db.chatDao();
+//                 chatDao.deleteAllChats();
                  chatItemsList = chatItemDao.index();
                  chatListData.setValue(chatItemsList);
                  super.onActive();

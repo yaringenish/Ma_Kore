@@ -45,7 +45,12 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        setContentView(binding.getRoot());
+//        setContentView(binding.getRoot());
+        binding.tvRegisterErrors.setText("");
+        binding.etRegisterPassword.setText("");
+        binding.etRegisterUsername.setText("");
+        binding.etRegisterSamePassword.setText("");
+        binding.etRegisterDisplayName.setText("");
         chatAPI = new ChatAPI(url.getText().toString());
     }
 
@@ -63,27 +68,27 @@ public class RegisterActivity extends AppCompatActivity {
             String confirmPassword = binding.etRegisterSamePassword.getText().toString();
             String displayName = binding.etRegisterDisplayName.getText().toString();
             if (userName.isEmpty()) {
-                binding.tvRegisterErrors.setText("Please insert user name");
+                binding.tvRegisterErrors.setText(R.string.please_insert_user_name);
                 return;
             }
 
             if (password.length() < 8) {
-                binding.tvRegisterErrors.setText("The password must be at least 8 characters");
+                binding.tvRegisterErrors.setText(R.string.the_password_must_be_at_least_8_characters);
                 return;
             }
 
             if (!password.equals(confirmPassword)) {
-                binding.tvRegisterErrors.setText("Please confirm the password again");
+                binding.tvRegisterErrors.setText(R.string.please_confirm_the_password_again);
                 return;
             }
 
             if (displayName.isEmpty()) {
-                binding.tvRegisterErrors.setText("Please insert display name");
+                binding.tvRegisterErrors.setText(R.string.please_insert_display_name);
                 return;
             }
 
             if (selectPicture.isEmpty()) {
-                binding.tvRegisterErrors.setText("Please choose a picture");
+                binding.tvRegisterErrors.setText(R.string.please_choose_a_picture);
                 return;
             }
 
