@@ -22,3 +22,4 @@ Clone the repository to your local machine.
 1. In order to run the application there are two options:
   - Use Android Studio's emulator and run the project
   - Install the app on Android phone and run it.
+2. The default connected server is in the URL "http://10.0.2.2:12345" for Android Studio's emulator, in order to connect another server you need to change it in the settings Activity.    
