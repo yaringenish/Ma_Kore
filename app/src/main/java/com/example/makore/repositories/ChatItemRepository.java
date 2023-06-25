@@ -13,6 +13,7 @@ import com.example.makore.api.ChatAPI;
 import com.example.makore.apiObjects.AddMessageRequestBody;
 import com.example.makore.callbacks.GetChatCallBack;
 import com.example.makore.dao.ChatDao;
+import com.example.makore.dao.ChatDao_Impl;
 import com.example.makore.dao.ChatItemDao;
 import com.example.makore.entities.Chat;
 import com.example.makore.entities.ChatListItem;
@@ -24,9 +25,9 @@ import java.util.List;
 
 public class ChatItemRepository {
 
-private ChatListData chatListData;
+    private ChatListData chatListData;
 
-private ChatListMessages chatListMessages;
+    private ChatListMessages chatListMessages;
     private AppDB db;
     private String token;
 
@@ -34,9 +35,9 @@ private ChatListMessages chatListMessages;
     private String chatId;
     private ChatDao chatDao;
     private ChatItemDao chatItemDao;
-    private ChatAPI chatAPI ;
+    private ChatAPI chatAPI;
 
-    private Chat currentChat = new Chat(null,null);
+    private Chat currentChat = new Chat(null, null);
     private List<Message> chatMessages;
 
     private List<ChatListItem> chatItemsList;
@@ -73,28 +74,29 @@ private ChatListMessages chatListMessages;
         this.chatAPI = new ChatAPI(url);
     }
 
-    class ChatListMessages extends MutableLiveData<List<Message>>{
-        public ChatListMessages(){
+    class ChatListMessages extends MutableLiveData<List<Message>> {
+        public ChatListMessages() {
             super();
         }
+
         @Override
         protected void onActive() {
             super.onActive();
             //from Dao
+            Chat stam = new Chat(null, null);
             currentChat = chatDao.get(chatId);
 
-            if(currentChat != null) {
+            if (currentChat != null) {
                 chatMessages = new LinkedList<>();
                 for (int i = 0; i < currentChat.getMessages().length; i++) {
                     chatMessages.add(currentChat.getMessages()[i]);
                 }
                 chatListMessages.setValue(chatMessages);
+            } else {
+                currentChat = new Chat(null, null);
             }
-            else{
-                currentChat = new Chat(null,null);
-            }
-            new Thread(() ->{
-                chatAPI.getChat(chatListMessages, token,chatId,chatDao,currentChat);
+            new Thread(() -> {
+                chatAPI.getChat(chatListMessages, token, chatId, chatDao, currentChat);
             }).start();
         }
 
@@ -107,6 +109,9 @@ private ChatListMessages chatListMessages;
     }
              @Override
              protected void onActive() {
+//                 chatItemDao.deleteAllChatItems();
+//                 chatDao = db.chatDao();
+//                 chatDao.deleteAllChats();
                  chatItemsList = chatItemDao.index();
                  chatListData.setValue(chatItemsList);
                  super.onActive();
@@ -116,24 +121,46 @@ private ChatListMessages chatListMessages;
              }
  }
 
-    public LiveData <List<ChatListItem>> getAll() {
+    public LiveData<List<ChatListItem>> getAll() {
         return chatListData;
     }
-    public LiveData <List<Message>> getMessages() {
+
+    public LiveData<List<Message>> getMessages() {
         return chatListMessages;
     }
 
-    public void addMessage(AddMessageRequestBody requestBody){
-        new Thread(() ->{
-            chatAPI.addMessage(chatListMessages, token, chatId , requestBody,chatDao , currentChat,this.username,contact);
+    public void addMessage(AddMessageRequestBody requestBody) {
+        new Thread(() -> {
+            chatAPI.addMessage(chatListMessages, token, chatId, requestBody, chatDao, currentChat, this.username, contact);
         }).start();
 
     }
-         public void reload(String msgName) {
-             chatAPI.getChatsbyUsername(chatListData, token,chatItemDao);
-             if(contact.getUsername() == msgName);
-             chatAPI.getChat(chatListMessages, token,chatId,chatDao,currentChat);
-        }
 
+    //    public void addChatItem(final ChatListItem chatItem) {
+//            api.addChat(chatItem);
+//        }
+//
+//       public void delete(final ChatListItem chatItem) {
+//            api.delete(chatItem);
+//     }
+//
+    public void reload(String msgName , int type) {
+        if(type == 1) {
+            chatAPI.getChatsbyUsername(chatListData, token, chatItemDao);
+        } else {
+            if (contact.getUsername().equals(msgName)) {
+                chatAPI.getChat(chatListMessages, token, chatId, chatDao, currentChat);
+            }
+        }
     }
+
+
+    public void deleteAllChats() {
+        chatDao.deleteAllChats();
+    }
+
+    public void getChatForPicture(String token, String chatId, String username, MutableLiveData<String> otherUserPicture) {
+        chatAPI.getChatForPicture(token, chatId, username, otherUserPicture);
+    }
+}
 

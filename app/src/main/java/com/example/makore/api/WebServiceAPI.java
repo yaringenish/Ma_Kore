@@ -1,6 +1,7 @@
 package com.example.makore.api;
 
 import com.example.makore.apiObjects.AddMessageRequestBody;
+import com.example.makore.apiObjects.FireBaseTokenPostBody;
 import com.example.makore.apiObjects.RegisterRequestBody;
 import com.example.makore.apiObjects.AddContactRequestBody;
 import com.example.makore.apiObjects.TokenRequestBody;
@@ -50,6 +51,7 @@ public interface WebServiceAPI {
  Call<ResponseBody> token (@Body TokenRequestBody requestBody);
 
 
-
+ @POST("Tokens/firebase")
+ Call<ResponseBody> saveFireBaseToken (@Body FireBaseTokenPostBody requestBody);
 
 }

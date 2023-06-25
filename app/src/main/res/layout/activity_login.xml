@@ -6,12 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/makorePicture"
+            android:layout_width="270dp"
+            android:layout_height="78dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/makore2" />
         <TextView
             android:id="@+id/tvLoginErrors"
             android:layout_width="match_parent"
@@ -54,6 +65,14 @@
             android:text="@string/login_register"
             android:background="@android:color/transparent"
             android:textColor="#002DA1"/>
+        <Button
+            android:id="@+id/btnSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_gravity="center"
+            android:text="@string/settings" />
     </LinearLayout>
 
 
